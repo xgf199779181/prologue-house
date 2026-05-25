@@ -181,46 +181,33 @@ body::before {
 }
 
 /* ╔══════════════════════════════════════════════════════════╗ */
-/* ║  Hello Kitty 猫耳朵                                     ║ */
+/* ║  Hello Kitty 头部                                       ║ */
 /* ╚══════════════════════════════════════════════════════════╝ */
 
-.kitty-ears {
+.kitty-head {
   display: flex;
   justify-content: center;
-  gap: 60px;
-  margin-bottom: -20px;
-  padding-top: 20px;
+  padding-top: 15px;
+  margin-bottom: -10px;
 }
 
-.ear {
-  width: 70px;
-  height: 80px;
-  background: var(--white);
-  border-radius: 50% 50% 20% 20%;
-  position: relative;
-  box-shadow:
-    0 4px 15px var(--shadow-pink),
-    inset 0 -10px 20px rgba(255, 182, 193, 0.2);
+.kitty-head svg {
+  width: 180px;
+  height: 144px;
+  filter: drop-shadow(0 4px 12px var(--shadow-pink));
+  animation: kittyBounce 2s ease-in-out infinite;
 }
 
-.ear.left {
-  transform: rotate(-15deg);
+@keyframes kittyBounce {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-6px) rotate(2deg); }
 }
 
-.ear.right {
-  transform: rotate(15deg);
-}
-
+/* 旧的猫耳朵隐藏 */
+.kitty-ears,
+.ear,
 .ear-inner {
-  position: absolute;
-  bottom: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40px;
-  height: 45px;
-  background: var(--pink-light);
-  border-radius: 50% 50% 30% 30%;
-  opacity: 0.6;
+  display: none;
 }
 
 /* ╔══════════════════════════════════════════════════════════╗ */
@@ -234,42 +221,15 @@ body::before {
 }
 
 .header-bow {
-  position: relative;
-  width: 60px;
-  height: 30px;
-  margin: 0 auto 15px;
+  width: 50px;
+  height: 34px;
+  margin: 0 auto 12px;
 }
 
-.bow-loop {
-  position: absolute;
-  width: 30px;
-  height: 24px;
-  background: var(--pink-primary);
-  border-radius: 50%;
-  top: 3px;
-  box-shadow: 0 2px 8px var(--shadow-pink);
-}
-
-.bow-loop.left {
-  left: 0;
-  transform: rotate(-20deg);
-}
-
-.bow-loop.right {
-  right: 0;
-  transform: rotate(20deg);
-}
-
-.bow-knot {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  background: var(--pink-deep);
-  border-radius: 50%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 2px 6px rgba(232, 74, 127, 0.3);
+.header-bow svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .site-title {
@@ -375,16 +335,16 @@ body::before {
   padding-left: 50%;
 }
 
-/* 时间轴节点 —— 蝴蝶结风格 */
+/* 时间轴节点 —— Hello Kitty 脸 */
 .timeline-dot {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 32px;
-  height: 32px;
+  width: 42px;
+  height: 42px;
   background: var(--white);
-  border: 3px solid var(--pink-primary);
+  border: 2.5px solid var(--pink-primary);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -392,15 +352,16 @@ body::before {
   box-shadow: 0 3px 12px var(--shadow-pink);
   z-index: 2;
   transition: all 0.3s ease;
+  overflow: hidden;
 }
 
-.timeline-dot::after {
-  content: '🎀';
-  font-size: 14px;
+.timeline-dot svg {
+  width: 34px;
+  height: 28px;
 }
 
 .timeline-item:hover .timeline-dot {
-  transform: translate(-50%, -50%) scale(1.2);
+  transform: translate(-50%, -50%) scale(1.15);
   border-color: var(--pink-deep);
   box-shadow: 0 4px 18px rgba(232, 74, 127, 0.35);
 }
@@ -716,17 +677,11 @@ body::before {
   color: var(--pink-primary);
 }
 
-.loading-bow {
-  position: relative;
-  width: 50px;
-  height: 28px;
-  margin: 0 auto 15px;
-  animation: spinBow 1.5s ease-in-out infinite;
-}
-
-@keyframes spinBow {
-  0%, 100% { transform: rotate(-10deg); }
-  50% { transform: rotate(10deg); }
+.loading-kitty svg {
+  width: 60px;
+  height: 48px;
+  margin: 0 auto 10px;
+  animation: kittyBounce 1.5s ease-in-out infinite;
 }
 
 .loading p {
@@ -755,10 +710,11 @@ body::before {
   color: var(--text-light);
 }
 
-.footer-bow {
-  font-size: 1.5rem;
-  margin-bottom: 8px;
-  animation: heartbeat 2.5s ease-in-out infinite;
+.footer-kitty svg {
+  width: 50px;
+  height: 40px;
+  margin: 0 auto 8px;
+  animation: kittyBounce 2.5s ease-in-out infinite;
 }
 
 .site-footer p {
