@@ -303,10 +303,6 @@ function renderArticle(id) {
             ${contentHTML}
           </div>
 
-          <div class="article-footer">
-            <div class="bow-divider">💖 🎀 💖</div>
-            <p>序章之家 · 记录属于我们的故事</p>
-          </div>
         </article>
       </div>
     </section>
