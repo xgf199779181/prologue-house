@@ -13,7 +13,7 @@ const FALLBACK_DATA = {
     {
       "id": "welcome",
       "title": "欢迎来到序章之家",
-      "date": "2026-05-25",
+      "date": "2026-03-27",
       "cover": null,
       "summary": "这是我们的专属小窝，记录属于我们的每一个美好瞬间。",
       "content": [
