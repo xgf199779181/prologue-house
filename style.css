@@ -74,6 +74,74 @@ body::before {
   overflow: hidden;
 }
 
+/* 点击爱心特效 */
+.click-heart {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  animation: clickHeartFloat 1s ease-out forwards;
+  user-select: none;
+  line-height: 1;
+}
+
+@keyframes clickHeartFloat {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(0.5) rotate(0deg);
+  }
+  30% {
+    opacity: 1;
+    transform: translate(var(--tx, -10px), -40px) scale(1.2) rotate(15deg);
+  }
+  60% {
+    opacity: 0.7;
+    transform: translate(var(--tx2, 10px), -80px) scale(1) rotate(-10deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx3, 0), -140px) scale(0.6) rotate(20deg);
+  }
+}
+
+/* BGM 播放器 */
+.bgm-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: var(--white);
+  color: var(--pink-primary);
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow:
+    0 4px 16px var(--shadow-pink),
+    0 2px 6px rgba(0, 0, 0, 0.06);
+  z-index: 100;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bgm-toggle:hover {
+  transform: scale(1.1);
+  box-shadow:
+    0 6px 24px var(--shadow-pink),
+    0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+.bgm-toggle.playing {
+  animation: bgmPulse 2s ease-in-out infinite;
+}
+
+@keyframes bgmPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 4px 16px var(--shadow-pink); }
+  50% { transform: scale(1.08); box-shadow: 0 6px 24px rgba(255, 107, 157, 0.4); }
+}
+
 .heart-float {
   position: absolute;
   color: var(--pink-light);

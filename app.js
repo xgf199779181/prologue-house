@@ -45,6 +45,8 @@ const FALLBACK_DATA = {
 
 document.addEventListener('DOMContentLoaded', () => {
   initFloatingHearts();
+  initClickHearts();
+  initBGM();
   loadData();
   window.addEventListener('hashchange', render);
 });
@@ -70,6 +72,76 @@ function initFloatingHearts() {
     el.style.animationDelay = Math.random() * 10 + 's';
     container.appendChild(el);
   }
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  点击爱心特效                                                */
+/* ═══════════════════════════════════════════════════════════ */
+
+function initClickHearts() {
+  const hearts = ['❤️', '💕', '💗', '💙', '💜', '🎀', '✨'];
+
+  document.addEventListener('click', (e) => {
+    const heart = document.createElement('span');
+    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+    heart.className = 'click-heart';
+    heart.style.left = e.clientX + 'px';
+    heart.style.top = e.clientY + 'px';
+    heart.style.fontSize = (16 + Math.random() * 14) + 'px';
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 1000);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  BGM 播放器                                                  */
+/* ═══════════════════════════════════════════════════════════ */
+
+function initBGM() {
+  const btn = document.createElement('button');
+  btn.className = 'bgm-toggle';
+  btn.innerHTML = '🎵';
+  btn.title = '播放/暂停背景音乐';
+  document.body.appendChild(btn);
+
+  const audio = new Audio();
+  // 主人把音乐文件放进 assets/ 文件夹，然后修改下面的路径
+  // 例孮：audio.src = 'assets/bgm.mp3';
+  audio.src = 'assets/bgm.mp3';
+  audio.loop = true;
+  audio.volume = 0.3;
+
+  let playing = false;
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation(); // 阻止触发点击爱心特效
+    if (playing) {
+      audio.pause();
+      btn.innerHTML = '🎵';
+      btn.classList.remove('playing');
+    } else {
+      audio.play().catch(() => {
+        // 浏览器阻止自动播放，等用户第一次点击再试
+      });
+      btn.innerHTML = '🎶';
+      btn.classList.add('playing');
+    }
+    playing = !playing;
+  });
+
+  // 第一次用户交互时尝试自动播放
+  const tryAutoPlay = () => {
+    if (!playing) {
+      audio.play().then(() => {
+        btn.innerHTML = '🎶';
+        btn.classList.add('playing');
+        playing = true;
+      }).catch(() => {});
+    }
+    document.removeEventListener('click', tryAutoPlay);
+  };
+  document.addEventListener('click', tryAutoPlay, { once: true });
 }
 
 /* ═══════════════════════════════════════════════════════════ */
