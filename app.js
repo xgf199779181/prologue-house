@@ -224,8 +224,8 @@ function renderTimeline() {
     return;
   }
 
-  // 按日期倒序（最新在上）
-  const sorted = [...articles].sort((a, b) => new Date(b.date) - new Date(a.date));
+  // 按日期正序排列（早的在前，越来越近）
+  const sorted = [...articles].sort((a, b) => new Date(a.date) - new Date(b.date));
 
   const itemsHTML = sorted.map((article, index) => {
     const coverHTML = article.cover
