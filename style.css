@@ -188,14 +188,16 @@ body::before {
   display: flex;
   justify-content: center;
   padding-top: 15px;
-  margin-bottom: -10px;
+  margin-bottom: -5px;
 }
 
-.kitty-head svg {
-  width: 180px;
-  height: 144px;
+.kitty-head .kitty-img {
+  width: 160px;
+  height: auto;
   filter: drop-shadow(0 4px 12px var(--shadow-pink));
   animation: kittyBounce 2s ease-in-out infinite;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 @keyframes kittyBounce {
