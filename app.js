@@ -235,15 +235,7 @@ function renderTimeline() {
     return `
       <div class="timeline-item" onclick="navigateToArticle('${escapeHtml(article.id)}')">
         <div class="timeline-dot">
-          <svg viewBox="0 0 80 64" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="22" cy="14" rx="11" ry="13" fill="white" stroke="#FF3366" stroke-width="2" transform="rotate(-20 22 14)"/>
-            <ellipse cx="58" cy="14" rx="11" ry="13" fill="white" stroke="#FF3366" stroke-width="2" transform="rotate(20 58 14)"/>
-            <ellipse cx="40" cy="38" rx="34" ry="24" fill="white" stroke="#FF3366" stroke-width="2"/>
-            <ellipse cx="28" cy="36" rx="3" ry="4" fill="#FF3366"/>
-            <ellipse cx="52" cy="36" rx="3" ry="4" fill="#FF3366"/>
-            <ellipse cx="40" cy="41" rx="4" ry="2.5" fill="#FFD700" stroke="#FF3366" stroke-width="1"/>
-            <circle cx="54" cy="10" r="5" fill="#FF3366" stroke="#FF3366" stroke-width="1"/>
-          </svg>
+          <img src="assets/kitty_header.png" alt="Hello Kitty">
         </div>
         <div class="timeline-card">
           ${coverHTML}
