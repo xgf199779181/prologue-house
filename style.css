@@ -187,12 +187,12 @@ body::before {
 .kitty-head {
   display: flex;
   justify-content: center;
-  padding-top: 5px;
-  margin-bottom: -22px;
+  padding-top: 0;
+  margin-bottom: -35px;
 }
 
 .kitty-head .kitty-img {
-  width: 120px;
+  width: 170px;
   height: auto;
   filter: drop-shadow(0 4px 12px var(--shadow-pink));
   animation: kittyBounce 2s ease-in-out infinite;
