@@ -35,6 +35,29 @@ const FALLBACK_DATA = {
         { "type": "text", "value": "{ \"id\": \"唯一标识\", \"title\": \"标题\", \"date\": \"YYYY-MM-DD\", \"cover\": \"封面图路径或null\", \"summary\": \"摘要\", \"content\": [ {\"type\":\"text\",\"value\":\"文本内容\"}, {\"type\":\"image\",\"src\":\"图片路径\",\"caption\":\"图片描述\"}, {\"type\":\"video\",\"src\":\"视频路径\",\"caption\":\"视频描述\"} ] }" },
         { "type": "text", "value": "图片和视频放在 assets/ 文件夹里，然后在 src 里写相对路径，比如 assets/my-photo.jpg。保存后刷新页面就能看到新文章啦！" }
       ]
+    },
+    {
+      "id": "birthday-0601",
+      "title": "生日快乐，崽崽",
+      "date": "2026-06-01",
+      "cover": "assets/article_0601_1.jpg",
+      "summary": "亲爱的崽崽，生日快乐。写下这些字的时候，我正想象着你拆开这封信的模样...",
+      "content": [
+        { "type": "text", "value": "<b>亲爱的崽崽，生日快乐。</b>" },
+        { "type": "text", "value": "写下这些字的时候，我正想象着你拆开这封信的模样——你应该是在安静的房间里，今年比较特殊，我们没办法一起过，真希望此刻能在你身边，亲手为你点上蜡烛，看你闭眼许愿。" },
+        { "type": "text", "value": "从2026年3月27日那天起，我的世界忽然变得不一样了。我们在soul相识，然后默契的一起卸载。后来在王者峡谷里并肩作战，在深夜里把心事说了一遍又一遍——明明隔着屏幕，却像是认识了很久很久。那时候我不知道，原来一个人可以在从未谋面的时候，就已经悄悄住进了另一个人的心里。<i>You are the most beautiful accident that ever happened to me.</i>" },
+        { "type": "text", "value": "4月23日，我终于在郑州见到了你。说真的，第一眼看到你的时候，我也很紧张，但是看到你更加害羞，我只能追着你让两颗心交融在一起。那几天我们只是吃吃喝喝，满街乱逛，却是我今年以来最快乐的时光。我陪着你第一次完了密室，你第一次玩，推理解谜的时候专注得不得了，通关那一刻你眼睛亮晶晶的样子，我到今天都记得清清楚楚。哦对了，我还被梧桐树毛打了一拳你笑了好久。后来在上海，福1088的本帮菜好吃的不行，鬼包子幸运的不用排队，跟你吃的很朴素却很幸福，还有本帮面热腾腾地端上来的时候，我觉得这就是幸福最具体的模样——和你一起，吃遍这个世界上所有好吃的东西。" },
+        { "type": "text", "value": "我常常在幻想我们的未来，那些画面清晰得仿佛触手可及，让我一想起来，心里就暖洋洋的，嘴角不自觉地上扬。就想啊，再等几年，等我们工作都稳定下来，生活有了默契的节奏。我们一起下班，手牵手逛超市，在货架间商量晚上吃鱼还是排骨，回到家一起做饭，哪怕手忙脚乱也觉得甜。天气好的周末，就去楼下散步，不用去什么景点，也不用计划什么路线，就随便走走，聊聊这一周的琐事，或者什么都不说，只是感受晚风，感受彼此掌心的温度。" },
+        { "type": "image", "src": "assets/article_0601_1.jpg", "caption": "" },
+        { "type": "text", "value": "我们说好了要爱一辈子，要去世界各地旅游，要吃各种各样好吃的。这个约定，我每一天都记在心里。" },
+        { "type": "text", "value": "当然，聚少离多的日子，偶尔也会觉得孤单。但真的没有关系，我每天都在认认真真地想你。<i>No distance is too far when your heart is my destination.</i> 我对你的思念，从来不会被山海的距离稀释个半分的，反而会在日复一日的时光里愈发郑重与真切。你不在我身旁的每一天，我都在默默期待着下一次相见。哪怕此刻我们没法朝夕相伴，也请你多多分享生活的日常，就算是再琐碎的小事，我也全部愿意倾听，全部都放在心尖上。" },
+        { "type": "text", "value": "<b>一别两地同风雨，我望明月月望你。</b>" },
+        { "type": "text", "value": "无论如何，我唯一的念头就是：不能错过你。遇见你之前，我不知道自己可以这样深爱一个人；遇见你之后，我只想用往后所有的时光来证明——这份爱会从热烈的心动，变成安稳的心安。" },
+        { "type": "text", "value": "所以，崽崽，你说好不好？从这一岁开始，到往后的每一岁，都让我陪在你身边。<i>I promise to love you, not just on your birthday, but every single day. Not just when we're together, but across every mile between us.</i>" },
+        { "type": "image", "src": "assets/article_0601_2.png", "caption": "" },
+        { "type": "text", "value": "生日快乐，崽崽。下一站，我们一起去哪里吃好吃的？" },
+        { "type": "text", "value": "<b>永远爱你的bb</b>" }
+      ]
     }
   ]
 };
@@ -320,7 +343,7 @@ function renderContentBlock(block) {
 
   switch (block.type) {
     case 'text':
-      return `<div class="content-block text">${escapeHtml(block.value || '').replace(/\n/g, '<br>')}</div>`;
+      return `<div class="content-block text">${allowSafeHtml(block.value || '').replace(/\n/g, '<br>')}</div>`;
 
     case 'image':
       return `
@@ -364,4 +387,14 @@ function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
+}
+
+function allowSafeHtml(text) {
+  if (typeof text !== 'string') return '';
+  const escaped = escapeHtml(text);
+  return escaped
+    .replace(/&lt;b&gt;/g, '<b>').replace(/&lt;\/b&gt;/g, '</b>')
+    .replace(/&lt;i&gt;/g, '<i>').replace(/&lt;\/i&gt;/g, '</i>')
+    .replace(/&lt;strong&gt;/g, '<strong>').replace(/&lt;\/strong&gt;/g, '</strong>')
+    .replace(/&lt;em&gt;/g, '<em>').replace(/&lt;\/em&gt;/g, '</em>');
 }
