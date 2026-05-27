@@ -1,5 +1,5 @@
 /**
- * 序章之家 —— Hello Kitty 粉色时间轴博客
+ * 序章小窝 —— Hello Kitty 粉色时间轴博客
  * 纯前端单页应用，通过 hash 路由切换页面
  */
 
@@ -7,12 +7,12 @@ let blogData = null;
 
 /* fallback 数据：当直接用 file:// 打开时 fetch 会失败，自动使用内嵌数据 */
 const FALLBACK_DATA = {
-  "siteName": "序章之家",
+  "siteName": "序章小窝",
   "subtitle": "我们的故事，从这里开始",
   "articles": [
     {
       "id": "welcome",
-      "title": "欢迎来到序章之家",
+      "title": "欢迎来到序章小窝",
       "date": "2026-03-27",
       "cover": null,
       "summary": "这是我们的专属小窝，记录属于我们的每一个美好瞬间。",

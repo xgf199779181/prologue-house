@@ -1,4 +1,4 @@
-# 🚀 序章之家 部署到 GitHub Pages 指南
+# 🚀 序章小窝 部署到 GitHub Pages 指南
 
 ---
 
