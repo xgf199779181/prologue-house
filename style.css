@@ -826,3 +826,507 @@ body::before {
     border-radius: var(--border-radius-md);
   }
 }
+
+/* ╔══════════════════════════════════════════════════════════════════════════════════════════════╗ */
+/* ║  新增功能样式：导航、计数器、拥抱、天气、地图、打字机、手写字体    ║ */
+/* ╚══════════════════════════════════════════════════════════════════════════════════════════════╝ */
+
+/* ── 导航栏 ── */
+.site-nav {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  padding: 12px 0 6px;
+  margin-top: -8px;
+}
+
+.site-nav a {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  color: var(--text-light);
+  text-decoration: none;
+  padding: 6px 16px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(255,182,193,0.3);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.site-nav a:hover {
+  background: var(--white);
+  color: var(--pink-primary);
+  box-shadow: 0 4px 16px var(--shadow-pink);
+  transform: translateY(-2px);
+}
+
+/* ── 相恋天数计数器 ── */
+.love-counter {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--pink-deep);
+  margin-top: 10px;
+  letter-spacing: 2px;
+  animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+.love-counter #daysTogether {
+  display: inline-block;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--pink-primary);
+  text-shadow: 1px 1px 0px var(--pink-light);
+  animation: heartbeat 2s ease-in-out infinite;
+  min-width: 30px;
+}
+
+/* ── 下次见面倒计时 ── */
+.meeting-countdown {
+  font-family: var(--font-hand);
+  font-size: 1rem;
+  color: var(--text-light);
+  margin-top: 6px;
+  opacity: 0.85;
+  animation: fadeInUp 1s ease-out 0.6s both;
+}
+
+.meeting-countdown .not-set {
+  color: var(--pink-primary);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+}
+
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(15px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ── 纪念日时间轴标记 ── */
+.timeline-dot.anniversary {
+  border-color: #FFD700;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5), 0 3px 12px var(--shadow-pink);
+  animation: anniversaryPulse 2s ease-in-out infinite;
+}
+
+.timeline-dot.anniversary::after {
+  content: attr(data-label);
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-hand);
+  font-size: 0.7rem;
+  color: var(--pink-deep);
+  white-space: nowrap;
+  background: var(--white);
+  padding: 1px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--pink-light);
+  box-shadow: 0 2px 8px var(--shadow-pink);
+}
+
+@keyframes anniversaryPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.4), 0 3px 12px var(--shadow-pink); }
+  50% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.7), 0 4px 18px var(--shadow-pink); }
+}
+
+/* ── 里程碑节点（无文章的纪念日） ── */
+.timeline-milestone {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+  padding: 20px 0;
+}
+
+.timeline-milestone .milestone-dot {
+  width: 50px;
+  height: 50px;
+  background: var(--white);
+  border: 3px solid #FFD700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+  z-index: 2;
+  animation: anniversaryPulse 2s ease-in-out infinite;
+}
+
+.timeline-milestone .milestone-label {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 65px;
+  font-family: var(--font-hand);
+  font-size: 0.9rem;
+  color: var(--pink-deep);
+  background: var(--white);
+  padding: 3px 14px;
+  border-radius: 14px;
+  border: 1.5px solid var(--pink-light);
+  box-shadow: 0 2px 10px var(--shadow-pink);
+  white-space: nowrap;
+}
+
+.timeline-milestone .milestone-date {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 8px;
+  font-family: var(--font-hand);
+  font-size: 0.75rem;
+  color: var(--text-light);
+  background: rgba(255,255,255,0.9);
+  padding: 1px 8px;
+  border-radius: 8px;
+}
+
+/* ── 发送拥抱按钮 ── */
+.hug-toggle {
+  position: fixed;
+  bottom: 88px;
+  right: 24px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: var(--white);
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px var(--shadow-pink), 0 2px 6px rgba(0,0,0,0.06);
+  z-index: 100;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hug-toggle:hover {
+  transform: scale(1.15);
+  box-shadow: 0 6px 24px rgba(255,107,157,0.35);
+}
+
+.hug-toggle:active {
+  transform: scale(0.95);
+}
+
+/* ── 拥抱全屏动画 ── */
+.hug-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,245,247,0.92);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.hug-overlay.active {
+  display: flex;
+  opacity: 1;
+}
+
+.hug-content {
+  text-align: center;
+  animation: hugPopIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.hug-emoji {
+  font-size: 6rem;
+  line-height: 1;
+  animation: hugExpand 1.5s ease-in-out infinite;
+  margin-bottom: 20px;
+}
+
+.hug-text {
+  font-family: var(--font-hand);
+  font-size: 1.4rem;
+  color: var(--pink-deep);
+  margin-bottom: 12px;
+  letter-spacing: 2px;
+}
+
+.hug-result {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--pink-primary);
+  opacity: 0;
+  animation: fadeInUp 0.8s ease 1.5s forwards;
+}
+
+@keyframes hugPopIn {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes hugExpand {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+}
+
+/* ── 打字机效果 ── */
+.typewriter-target {
+  min-height: 1.8em;
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background: var(--pink-primary);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: cursorBlink 0.8s step-end infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ── 双城天气 ── */
+.dual-weather {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 18px;
+  padding: 0 20px;
+  animation: fadeInUp 1s ease-out 0.9s both;
+}
+
+.weather-card {
+  background: rgba(255,255,255,0.85);
+  border-radius: var(--border-radius-md);
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 3px 12px var(--shadow-card);
+  border: 1px solid rgba(255,182,193,0.25);
+  min-width: 130px;
+}
+
+.weather-city {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+
+.weather-icon {
+  font-size: 1.6rem;
+}
+
+.weather-temp {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--pink-deep);
+  font-weight: bold;
+}
+
+.weather-loading {
+  font-family: var(--font-hand);
+  font-size: 0.9rem;
+  color: var(--text-light);
+  padding: 8px;
+}
+
+/* ── 地图页面 ── */
+.map-page {
+  padding: 20px 0 60px;
+}
+
+.map-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.map-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  color: var(--pink-primary);
+  margin-bottom: 8px;
+}
+
+.map-header p {
+  font-family: var(--font-hand);
+  font-size: 1rem;
+  color: var(--text-light);
+}
+
+.map-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.6);
+  border-radius: var(--border-radius-lg);
+  padding: 30px;
+  box-shadow: 0 6px 24px var(--shadow-card);
+  position: relative;
+}
+
+.map-svg {
+  width: 100%;
+  height: auto;
+}
+
+.city-dot {
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+.city-dot circle {
+  transition: all 0.4s ease;
+}
+
+.city-dot:hover circle {
+  transform: scale(1.3);
+}
+
+.city-dot.visited circle {
+  fill: var(--pink-primary);
+  stroke: var(--pink-deep);
+  stroke-width: 2.5px;
+  filter: drop-shadow(0 0 8px rgba(255,107,157,0.6));
+}
+
+.city-dot.visited .city-pulse {
+  animation: cityPulse 2s ease-in-out infinite;
+}
+
+.city-dot.current circle {
+  fill: #9B59B6;
+  stroke: #8E44AD;
+  stroke-width: 2.5px;
+  filter: drop-shadow(0 0 8px rgba(155,89,182,0.5));
+}
+
+.city-dot.future circle {
+  fill: #D5A6BD;
+  stroke: #C27BA0;
+  stroke-width: 1.5px;
+  opacity: 0.7;
+}
+
+.city-label {
+  font-family: var(--font-hand);
+  font-size: 11px;
+  fill: var(--text-main);
+  text-anchor: middle;
+}
+
+.map-legend {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.legend-dot.visited { background: var(--pink-primary); box-shadow: 0 0 6px rgba(255,107,157,0.5); }
+.legend-dot.current { background: #9B59B6; }
+.legend-dot.future { background: #D5A6BD; opacity: 0.7; }
+
+.map-connection {
+  stroke: var(--pink-light);
+  stroke-width: 2;
+  stroke-dasharray: 6,4;
+  opacity: 0.5;
+  animation: dashFlow 2s linear infinite;
+}
+
+@keyframes cityPulse {
+  0%, 100% { r: 6; }
+  50% { r: 9; }
+}
+
+@keyframes dashFlow {
+  0% { stroke-dashoffset: 20; }
+  100% { stroke-dashoffset: 0; }
+}
+
+/* ── 手写字体优化 ── */
+.article-content .content-block.text {
+  font-family: var(--font-hand);
+  font-size: 1.08rem;
+  line-height: 2;
+  letter-spacing: 0.5px;
+  text-indent: 2em;
+}
+
+.article-content .content-block.text b,
+.article-content .content-block.text strong {
+  font-family: var(--font-hand);
+  color: var(--pink-deep);
+}
+
+.article-content .content-block.text i,
+.article-content .content-block.text em {
+  font-family: var(--font-hand);
+  color: var(--text-light);
+  opacity: 0.9;
+}
+
+/* 移动端适配 ── */
+@media (max-width: 640px) {
+  .site-nav {
+    gap: 12px;
+  }
+  .site-nav a {
+    font-size: 0.85rem;
+    padding: 5px 12px;
+  }
+  .love-counter {
+    font-size: 1rem;
+  }
+  .love-counter #daysTogether {
+    font-size: 1.3rem;
+  }
+  .dual-weather {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .weather-card {
+    min-width: 160px;
+    justify-content: center;
+  }
+  .hug-toggle {
+    bottom: 84px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+  }
+  .hug-emoji {
+    font-size: 4rem;
+  }
+  .hug-text {
+    font-size: 1.1rem;
+  }
+  .map-container {
+    padding: 16px;
+  }
+}

@@ -5,6 +5,16 @@
 
 let blogData = null;
 
+/* 纪念日配置 */
+const ANNIVERSARIES = {
+  '2026-03-27': { label: '相恋日', icon: '💕' },
+  '2026-06-01': { label: '崽崽生日', icon: '🎂' }
+};
+
+const MILESTONES = [
+  { date: '2026-04-23', title: '郑州初见', icon: '✨' }
+];
+
 /* fallback 数据：当直接用 file:// 打开时 fetch 会失败，自动使用内嵌数据 */
 const FALLBACK_DATA = {
   "siteName": "序章小窝",
@@ -57,6 +67,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initFloatingHearts();
   initClickHearts();
   initBGM();
+  initLoveCounter();
+  initHugButton();
+  initWeather();
+  initNav();
   loadData();
   window.addEventListener('hashchange', render);
 });
@@ -206,6 +220,9 @@ function render() {
     const id = hash.replace('#article/', '');
     renderArticle(id);
     window.scrollTo(0, 0);
+  } else if (hash === '#map') {
+    renderMap();
+    window.scrollTo(0, 0);
   } else {
     renderTimeline();
   }
@@ -234,24 +251,41 @@ function renderTimeline() {
     return;
   }
 
-  // 按日期正序排列（早的在前，越来越近）
-  const sorted = [...articles].sort((a, b) => new Date(a.date) - new Date(b.date));
+  // 合并文章和里程碑，按日期正序排列
+  const articleItems = articles.map(a => ({ ...a, _type: 'article' }));
+  const milestoneItems = MILESTONES.map(m => ({ ...m, _type: 'milestone' }));
+  const allItems = [...articleItems, ...milestoneItems]
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
 
-  const itemsHTML = sorted.map((article, index) => {
-    const coverHTML = article.cover
-      ? `<img class="card-cover" src="${escapeHtml(article.cover)}" alt="${escapeHtml(article.title)}" loading="lazy">`
+  const itemsHTML = allItems.map((item) => {
+    if (item._type === 'milestone') {
+      return `
+        <div class="timeline-milestone">
+          <div class="milestone-date">${escapeHtml(item.date)}</div>
+          <div class="milestone-dot">${item.icon}</div>
+          <div class="milestone-label">${escapeHtml(item.title)}</div>
+        </div>
+      `;
+    }
+
+    const anni = ANNIVERSARIES[item.date];
+    const dotClass = anni ? 'timeline-dot anniversary' : 'timeline-dot';
+    const dotLabel = anni ? ` data-label="${anni.label}"` : '';
+
+    const coverHTML = item.cover
+      ? `<img class="card-cover" src="${escapeHtml(item.cover)}" alt="${escapeHtml(item.title)}" loading="lazy">`
       : '';
 
     return `
-      <div class="timeline-item" onclick="navigateToArticle('${escapeHtml(article.id)}')">
-        <div class="timeline-dot">
+      <div class="timeline-item" onclick="navigateToArticle('${escapeHtml(item.id)}')">
+        <div class="${dotClass}"${dotLabel}>
           <img src="assets/kitty_header.png" alt="Hello Kitty">
         </div>
         <div class="timeline-card">
           ${coverHTML}
-          <div class="card-date">${escapeHtml(article.date)}</div>
-          <div class="card-title">${escapeHtml(article.title)}</div>
-          <div class="card-summary">${escapeHtml(article.summary || '')}</div>
+          <div class="card-date">${escapeHtml(item.date)}</div>
+          <div class="card-title">${escapeHtml(item.title)}</div>
+          <div class="card-summary">${escapeHtml(item.summary || '')}</div>
         </div>
       </div>
     `;
@@ -296,7 +330,7 @@ function renderArticle(id) {
     return;
   }
 
-  const contentHTML = (article.content || []).map(block => renderContentBlock(block)).join('');
+  const contentHTML = (article.content || []).map((block, i) => renderContentBlock(block, i)).join('');
 
   app.innerHTML = `
     <section class="article-section">
@@ -311,7 +345,7 @@ function renderArticle(id) {
             <div class="article-date">${escapeHtml(article.date)}</div>
           </header>
 
-          <div class="article-content">
+          <div class="article-content" data-article-id="${escapeHtml(article.id)}">
             ${contentHTML}
           </div>
 
@@ -319,18 +353,23 @@ function renderArticle(id) {
       </div>
     </section>
   `;
+
+  // 触发打字机效果（首次打开该文章时）
+  setTimeout(() => initTypewriter(article.id), 100);
 }
 
 /* ═══════════════════════════════════════════════════════════ */
 /*  内容块渲染                                                  */
 /* ═══════════════════════════════════════════════════════════ */
 
-function renderContentBlock(block) {
+function renderContentBlock(block, index) {
   if (!block || !block.type) return '';
 
   switch (block.type) {
     case 'text':
-      return `<div class="content-block text">${allowSafeHtml(block.value || '').replace(/\n/g, '<br>')}</div>`;
+      const isFirst = index === 0;
+      const twClass = isFirst ? ' typewriter-target' : '';
+      return `<div class="content-block text${twClass}" data-tw="${isFirst ? '1' : '0'}">${allowSafeHtml(block.value || '').replace(/\n/g, '<br>')}</div>`;
 
     case 'image':
       return `
@@ -384,4 +423,233 @@ function allowSafeHtml(text) {
     .replace(/&lt;i&gt;/g, '<i>').replace(/&lt;\/i&gt;/g, '</i>')
     .replace(/&lt;strong&gt;/g, '<strong>').replace(/&lt;\/strong&gt;/g, '</strong>')
     .replace(/&lt;em&gt;/g, '<em>').replace(/&lt;\/em&gt;/g, '</em>');
+}
+
+/* ╔═════════════════════════════════════════════════════════════════════════════════════════════╗ */
+/* ║  新增功能：计数器、拥抱、打字机、天气、地图、导航                  ║ */
+/* ╚═════════════════════════════════════════════════════════════════════════════════════════════╝ */
+
+function initLoveCounter() {
+  const el = document.getElementById('daysTogether');
+  if (!el) return;
+  const start = new Date('2026-03-27T00:00:00');
+  const now = new Date();
+  const diff = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+  el.textContent = diff >= 0 ? diff : 0;
+}
+
+function initHugButton() {
+  const btn = document.createElement('button');
+  btn.className = 'hug-toggle';
+  btn.innerHTML = '🤗';
+  btn.title = '给崽崽发送拥抱';
+  document.body.appendChild(btn);
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    sendHug();
+  });
+}
+
+function sendHug() {
+  const overlay = document.getElementById('hugOverlay');
+  if (!overlay) return;
+
+  overlay.classList.add('active');
+
+  // 刷新动画
+  const content = overlay.querySelector('.hug-content');
+  const result = overlay.querySelector('.hug-result');
+  content.style.animation = 'none';
+  void content.offsetWidth;
+  content.style.animation = '';
+  result.style.opacity = '0';
+  result.style.animation = 'none';
+  void result.offsetWidth;
+  result.style.animation = 'fadeInUp 0.8s ease 1.5s forwards';
+
+  // 点击爱心特效
+  const hearts = ['❤️', '💕', '💗', '💙', '💜', '🎀', '✨'];
+  const cx = window.innerWidth / 2;
+  const cy = window.innerHeight / 2;
+  for (let i = 0; i < 12; i++) {
+    setTimeout(() => {
+      const h = document.createElement('span');
+      h.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+      h.className = 'click-heart';
+      h.style.left = (cx + (Math.random() - 0.5) * 200) + 'px';
+      h.style.top = (cy + (Math.random() - 0.5) * 200) + 'px';
+      h.style.fontSize = (20 + Math.random() * 20) + 'px';
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 1000);
+    }, i * 80);
+  }
+
+  setTimeout(() => {
+    overlay.classList.remove('active');
+  }, 3500);
+}
+
+function initTypewriter(articleId) {
+  const container = document.querySelector(`.article-content[data-article-id="${articleId}"]`);
+  if (!container) return;
+
+  const key = 'typed_' + articleId;
+  if (sessionStorage.getItem(key)) return;
+
+  const target = container.querySelector('.typewriter-target');
+  if (!target) return;
+
+  const rawHTML = target.innerHTML;
+  const tmp = document.createElement('div');
+  tmp.innerHTML = rawHTML;
+  const plainText = tmp.textContent || tmp.innerText || '';
+
+  target.innerHTML = '<span class="typewriter-text"></span><span class="typewriter-cursor">|</span>';
+  const textSpan = target.querySelector('.typewriter-text');
+  const cursor = target.querySelector('.typewriter-cursor');
+  let i = 0;
+  const speed = 55;
+
+  function typeChar() {
+    if (i < plainText.length) {
+      textSpan.textContent += plainText.charAt(i);
+      i++;
+      setTimeout(typeChar, speed);
+    } else {
+      cursor.remove();
+      target.innerHTML = rawHTML;
+      sessionStorage.setItem(key, '1');
+    }
+  }
+
+  typeChar();
+}
+
+async function initWeather() {
+  const container = document.getElementById('dualWeather');
+  if (!container) return;
+
+  const cities = [
+    { name: '开封', lat: 34.79, lon: 114.35 },
+    { name: '广州', lat: 23.13, lon: 113.26 }
+  ];
+
+  try {
+    const results = await Promise.all(
+      cities.map(c => fetchWeather(c.lat, c.lon).then(w => ({ ...c, ...w })))
+    );
+
+    container.innerHTML = results.map(r => `
+      <div class="weather-card">
+        <span class="weather-icon">${weatherEmoji(r.weathercode, r.is_day)}</span>
+        <div>
+          <div class="weather-city">${escapeHtml(r.name)}</div>
+          <div class="weather-temp">${r.temperature}°C</div>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    container.innerHTML = `
+      <div class="weather-card"><div class="weather-city">开封 ☀️</div></div>
+      <div class="weather-card"><div class="weather-city">广州 ☀️</div></div>
+    `;
+  }
+}
+
+async function fetchWeather(lat, lon) {
+  const res = await fetch(
+    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=Asia%2FShanghai`
+  );
+  if (!res.ok) throw new Error('weather fetch failed');
+  const data = await res.json();
+  return data.current_weather;
+}
+
+function weatherEmoji(code, isDay) {
+  if (code === 0) return isDay ? '☀️' : '🌙';
+  if (code >= 1 && code <= 3) return '⛅';
+  if (code >= 45 && code <= 48) return '🌫️';
+  if (code >= 51 && code <= 55) return '🌦️';
+  if (code >= 61 && code <= 65) return '🌧️';
+  if (code >= 71 && code <= 77) return '🌨️';
+  if (code >= 95 && code <= 99) return '⛈️';
+  return '☀️';
+}
+
+function renderMap() {
+  const app = document.getElementById('app');
+
+  const cities = [
+    { name: '北京', x: 65, y: 18, type: 'future' },
+    { name: '武汉', x: 60, y: 48, type: 'future' },
+    { name: '郑州', x: 57, y: 40, type: 'visited' },
+    { name: '开封', x: 56, y: 39, type: 'current' },
+    { name: '上海', x: 78, y: 52, type: 'visited' },
+    { name: '大理', x: 28, y: 68, type: 'future' },
+    { name: '广州', x: 58, y: 78, type: 'current' }
+  ];
+
+  const cityDots = cities.map(c => `
+    <g class="city-dot ${c.type}" transform="translate(${c.x},${c.y})">
+      ${c.type === 'visited' ? '<circle class="city-pulse" cx="0" cy="0" r="12" fill="rgba(255,107,157,0.15)" />' : ''}
+      <circle cx="0" cy="0" r="5" />
+      <text class="city-label" x="0" y="16">${c.name}</text>
+    </g>
+  `).join('');
+
+  const connections = `
+    <line class="map-connection" x1="57" y1="40" x2="78" y2="52" />
+  `;
+
+  app.innerHTML = `
+    <section class="map-page">
+      <div style="max-width:800px;margin:0 auto;">
+        <button class="back-btn" onclick="goHome()">
+          <span>←</span> 返回首页
+        </button>
+
+        <div class="map-header">
+          <h2>🗺️ 我们的地图</h2>
+          <p>走过的路，和即将走的路</p>
+        </div>
+
+        <div class="map-container">
+          <svg class="map-svg" viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,182,193,0.15)" stroke-width="0.5"/>
+              </pattern>
+            </defs>
+            <rect width="100" height="90" fill="url(#grid)" rx="12" />
+            ${connections}
+            ${cityDots}
+          </svg>
+
+          <div class="map-legend">
+            <div class="legend-item">
+              <div class="legend-dot visited"></div>
+              <span>已去过</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot current"></div>
+              <span>现在所在</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot future"></div>
+              <span>未来要去</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function initNav() {
+  window.addEventListener('hashchange', () => {
+    document.querySelectorAll('.site-nav a').forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === window.location.hash);
+    });
+  });
 }
