@@ -12,7 +12,8 @@ const ANNIVERSARIES = {
 };
 
 const MILESTONES = [
-  { date: '2026-04-23', title: '郑州初见', icon: '✨' }
+  { date: '2026-04-23', title: '郑州初见', icon: '✨' },
+  { date: '2026-05-14', title: '上海之行', icon: '✨' }
 ];
 
 /* fallback 数据：当直接用 file:// 打开时 fetch 会失败，自动使用内嵌数据 */
@@ -264,11 +265,11 @@ function renderTimeline() {
       : '';
 
     return `
-      <div class="timeline-item" onclick="navigateToArticle('${escapeHtml(item.id)}')">
+      <div class="timeline-item">
         <div class="${dotClass}"${dotLabel}>
           <img src="assets/kitty_header.png" alt="Hello Kitty">
         </div>
-        <div class="timeline-card">
+        <div class="timeline-card" onclick="navigateToArticle('${escapeHtml(item.id)}')">
           ${coverHTML}
           <div class="card-date">${escapeHtml(item.date)}</div>
           <div class="card-title">${escapeHtml(item.title)}</div>
