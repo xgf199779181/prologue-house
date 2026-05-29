@@ -67,12 +67,20 @@ document.addEventListener('DOMContentLoaded', () => {
   initFloatingHearts();
   initClickHearts();
   initBGM();
-  initLoveCounter();
   initHugButton();
-  initWeather();
-  initNav();
-  loadData();
-  window.addEventListener('hashchange', render);
+
+  const page = document.body.dataset.page || 'home';
+
+  if (page === 'article') {
+    loadArticlePage();
+  } else if (page === 'map') {
+    loadMapPage();
+  } else {
+    initLoveCounter();
+    initWeather();
+    initNav();
+    loadData();
+  }
 });
 
 /* ═══════════════════════════════════════════════════════════ */
@@ -189,7 +197,7 @@ async function loadData() {
       subtitleEl.textContent = blogData.subtitle;
     }
 
-    render();
+    renderTimeline();
   } catch (err) {
     console.log('直接打开模式，使用内嵌数据（如需更新文章，请用本地服务器打开）');
     blogData = FALLBACK_DATA;
@@ -202,28 +210,6 @@ async function loadData() {
       subtitleEl.textContent = blogData.subtitle;
     }
 
-    render();
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════ */
-/*  路由渲染                                                    */
-/* ═══════════════════════════════════════════════════════════ */
-
-function render() {
-  const app = document.getElementById('app');
-  if (!blogData) return;
-
-  const hash = window.location.hash;
-
-  if (hash.startsWith('#article/')) {
-    const id = hash.replace('#article/', '');
-    renderArticle(id);
-    window.scrollTo(0, 0);
-  } else if (hash === '#map') {
-    renderMap();
-    window.scrollTo(0, 0);
-  } else {
     renderTimeline();
   }
 }
@@ -400,12 +386,11 @@ function renderContentBlock(block, index) {
 /* ═══════════════════════════════════════════════════════════ */
 
 function navigateToArticle(id) {
-  window.location.hash = `#article/${id}`;
+  window.location.href = 'article.html?id=' + encodeURIComponent(id);
 }
 
 function goHome() {
-  window.location.hash = '';
-  window.scrollTo(0, 0);
+  window.location.href = 'index.html';
 }
 
 function escapeHtml(text) {
@@ -664,9 +649,57 @@ function initLeafletMap() {
 }
 
 function initNav() {
-  window.addEventListener('hashchange', () => {
-    document.querySelectorAll('.site-nav a').forEach(a => {
-      a.classList.toggle('active', a.getAttribute('href') === window.location.hash);
-    });
+  // 已不再使用 hash 路由，简单高亮当前页面链接
+  const path = window.location.pathname;
+  document.querySelectorAll('.site-nav a').forEach(a => {
+    const href = a.getAttribute('href') || '';
+    const isActive = href === 'index.html' && (path.endsWith('index.html') || path.endsWith('/'))
+                  || path.includes(href);
+    a.classList.toggle('active', isActive);
   });
+}
+
+async function loadArticlePage() {
+  const app = document.getElementById('app');
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+
+  if (!id) {
+    app.innerHTML = `
+      <section class="article-section">
+        <button class="back-btn" onclick="goHome()"><span>←</span> 返回首页</button>
+        <div style="text-align:center;padding:60px;">
+          <div style="font-size:3rem;margin-bottom:15px;">🎀</div>
+          <p>文章ID缺失</p>
+        </div>
+      </section>
+    `;
+    return;
+  }
+
+  try {
+    const res = await fetch('articles.json');
+    if (!res.ok) throw new Error('fetch failed');
+    blogData = await res.json();
+  } catch {
+    blogData = FALLBACK_DATA;
+  }
+
+  renderArticle(id);
+  window.scrollTo(0, 0);
+}
+
+async function loadMapPage() {
+  const app = document.getElementById('app');
+
+  try {
+    const res = await fetch('articles.json');
+    if (!res.ok) throw new Error('fetch failed');
+    blogData = await res.json();
+  } catch {
+    blogData = FALLBACK_DATA;
+  }
+
+  renderMap();
+  window.scrollTo(0, 0);
 }
