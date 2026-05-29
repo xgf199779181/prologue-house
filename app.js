@@ -468,43 +468,165 @@ function initMapButton() {
   });
 }
 
+/* 情话池 */
+const HUG_QUOTES = [
+  "我把整个宇宙的温柔，都给你",
+  "不管多远，我的心永远在你那边",
+  "每一次心跳，都是在想你",
+  "你是我这辈子最幸运的事",
+  "想你的时候，连空气都是甜的",
+  "遇见你之前，我不知道自己可以这样深爱一个人",
+  "从热烈的心动，到安稳的心安，都是你",
+  "我们要相约过一辈子，这不是托词，是承诺"
+];
+
 function sendHug() {
   const overlay = document.getElementById('hugOverlay');
   if (!overlay) return;
 
+  // 重置动画
+  const kitties = overlay.querySelectorAll('.hug-kitty-left, .hug-kitty-right, .hug-heart-center, .hug-quote, .hug-result');
+  kitties.forEach(el => {
+    el.style.animation = 'none';
+    void el.offsetWidth;
+    el.style.animation = '';
+  });
+  const quoteEl = document.getElementById('hugQuote');
+  if (quoteEl) { quoteEl.textContent = ''; quoteEl.classList.remove('typing'); }
+
   overlay.classList.add('active');
 
-  // 刷新动画
-  const content = overlay.querySelector('.hug-content');
-  const result = overlay.querySelector('.hug-result');
-  content.style.animation = 'none';
-  void content.offsetWidth;
-  content.style.animation = '';
-  result.style.opacity = '0';
-  result.style.animation = 'none';
-  void result.offsetWidth;
-  result.style.animation = 'fadeInUp 0.8s ease 1.5s forwards';
+  // 启动粒子风暴
+  startHugParticles();
 
-  // 点击爱心特效
-  const hearts = ['❤️', '💕', '💗', '💙', '💜', '🎀', '✨'];
-  const cx = window.innerWidth / 2;
-  const cy = window.innerHeight / 2;
-  for (let i = 0; i < 12; i++) {
-    setTimeout(() => {
-      const h = document.createElement('span');
-      h.textContent = hearts[Math.floor(Math.random() * hearts.length)];
-      h.className = 'click-heart';
-      h.style.left = (cx + (Math.random() - 0.5) * 200) + 'px';
-      h.style.top = (cy + (Math.random() - 0.5) * 200) + 'px';
-      h.style.fontSize = (20 + Math.random() * 20) + 'px';
-      document.body.appendChild(h);
-      setTimeout(() => h.remove(), 1000);
-    }, i * 80);
-  }
+  // 随机情话打字机
+  const quote = HUG_QUOTES[Math.floor(Math.random() * HUG_QUOTES.length)];
+  typeHugQuote(quote);
 
   setTimeout(() => {
     overlay.classList.remove('active');
-  }, 3500);
+    stopHugParticles();
+  }, 4000);
+}
+
+function typeHugQuote(text) {
+  const el = document.getElementById('hugQuote');
+  if (!el) return;
+  el.classList.add('typing');
+  el.textContent = '';
+  let i = 0;
+  const speed = 70;
+  function type() {
+    if (i < text.length) {
+      el.textContent += text.charAt(i);
+      i++;
+      setTimeout(type, speed);
+    }
+  }
+  setTimeout(type, 1500);
+}
+
+/* Canvas 粒子风暴 */
+let hugParticleAnim = null;
+
+function startHugParticles() {
+  const canvas = document.getElementById('hugCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const particles = [];
+  const colors = ['#FF3366', '#FF6B9D', '#FFD700', '#FF99CC', '#FF6699', '#FFB6C1'];
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+
+  // 初始化粒子（从四周飞向中心）
+  for (let i = 0; i < 80; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const dist = Math.max(canvas.width, canvas.height) * 0.6 + Math.random() * 200;
+    particles.push({
+      x: cx + Math.cos(angle) * dist,
+      y: cy + Math.sin(angle) * dist,
+      tx: cx,
+      ty: cy,
+      size: 2 + Math.random() * 5,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      speed: 2 + Math.random() * 4,
+      angle: angle,
+      dist: dist,
+      phase: 'flyIn', // flyIn → explode → fade
+      life: 0,
+      vx: 0, vy: 0
+    });
+  }
+
+  let frame = 0;
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    frame++;
+
+    let activeCount = 0;
+    particles.forEach(p => {
+      if (p.phase === 'flyIn') {
+        const dx = p.tx - p.x;
+        const dy = p.ty - p.y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 15 || frame > 90) {
+          p.phase = 'explode';
+          const explodeAngle = Math.random() * Math.PI * 2;
+          const explodeSpeed = 3 + Math.random() * 6;
+          p.vx = Math.cos(explodeAngle) * explodeSpeed;
+          p.vy = Math.sin(explodeAngle) * explodeSpeed;
+          p.life = 1;
+        } else {
+          p.x += (dx / d) * p.speed;
+          p.y += (dy / d) * p.speed;
+        }
+      } else if (p.phase === 'explode') {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= 0.96;
+        p.vy *= 0.96;
+        p.life -= 0.012;
+        if (p.life <= 0) p.phase = 'dead';
+      }
+
+      if (p.phase !== 'dead') {
+        activeCount++;
+        ctx.globalAlpha = p.phase === 'explode' ? p.life : Math.min(1, p.dist / 200);
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        // 画爱心
+        const s = p.size;
+        const hx = p.x, hy = p.y;
+        ctx.moveTo(hx, hy + s * 0.3);
+        ctx.bezierCurveTo(hx - s * 0.5, hy - s * 0.3, hx - s, hy + s * 0.1, hx, hy + s * 0.8);
+        ctx.bezierCurveTo(hx + s, hy + s * 0.1, hx + s * 0.5, hy - s * 0.3, hx, hy + s * 0.3);
+        ctx.fill();
+      }
+    });
+
+    ctx.globalAlpha = 1;
+    if (activeCount > 0) {
+      hugParticleAnim = requestAnimationFrame(draw);
+    }
+  }
+
+  hugParticleAnim = requestAnimationFrame(draw);
+}
+
+function stopHugParticles() {
+  if (hugParticleAnim) {
+    cancelAnimationFrame(hugParticleAnim);
+    hugParticleAnim = null;
+  }
+  const canvas = document.getElementById('hugCanvas');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
 }
 
 function initTypewriter(articleId) {
