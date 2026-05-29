@@ -1,9 +1,15 @@
 /**
  * 序章小窝 —— Hello Kitty 粉色时间轴博客
- * 纯前端单页应用，通过 hash 路由切换页面
+ * 多页面静态站点，通过独立 HTML 切换页面
  */
 
 let blogData = null;
+const CURRENT_PAGE = document.body.dataset.page || 'home';
+
+/* 页面离开时保存滚动位置 */
+window.addEventListener('beforeunload', () => {
+  sessionStorage.setItem('scroll_' + CURRENT_PAGE, window.scrollY);
+});
 
 /* 纪念日配置 */
 const ANNIVERSARIES = {
@@ -236,6 +242,7 @@ function renderTimeline() {
         </div>
       </div>
     `;
+    restoreHomeScroll();
     return;
   }
 
@@ -290,6 +297,8 @@ function renderTimeline() {
       </div>
     </section>
   `;
+
+  restoreHomeScroll();
 }
 
 /* ═══════════════════════════════════════════════════════════ */
@@ -393,6 +402,14 @@ function navigateToArticle(id) {
 
 function goHome() {
   window.location.href = 'index.html';
+}
+
+function restoreHomeScroll() {
+  if (CURRENT_PAGE !== 'home') return;
+  const saved = sessionStorage.getItem('scroll_home');
+  if (saved !== null) {
+    window.scrollTo(0, parseInt(saved));
+  }
 }
 
 function escapeHtml(text) {
