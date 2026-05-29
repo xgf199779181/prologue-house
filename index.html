@@ -1,1 +1,121 @@
-File unchanged since last read. The content from the earlier read_file result in this conversation is still current — refer to that instead of re-reading.
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>序章小窝</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="home">
+  <!-- 浮动背景爱心 -->
+  <div class="floating-hearts" id="floatingHearts"></div>
+
+  <div class="page-wrapper">
+    <!-- Hello Kitty 头部 -->
+    <div class="kitty-head">
+      <img src="assets/kitty_header.png" alt="Hello Kitty" class="kitty-img">
+    </div>
+
+    <header class="site-header">
+      <div class="header-bow">
+        <svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="15" cy="20" rx="14" ry="10" fill="#FF3366" stroke="#333" stroke-width="2" transform="rotate(-20 15 20)"/>
+          <ellipse cx="45" cy="20" rx="14" ry="10" fill="#FF3366" stroke="#333" stroke-width="2" transform="rotate(20 45 20)"/>
+          <circle cx="30" cy="20" r="8" fill="#FF3366" stroke="#333" stroke-width="2"/>
+        </svg>
+      </div>
+      <h1 class="site-title">序章小窝</h1>
+      <p class="site-subtitle" id="siteSubtitle">我们的故事，从这里开始</p>
+      <div class="love-counter">
+        💕 我们在一起 <span id="daysTogether">0</span> 天 💕
+      </div>
+      <div class="meeting-countdown">
+        🎀 距离见到崽崽还有 <span class="not-set">（还未定）</span> 天
+      </div>
+      <div class="header-decoration">
+        <span class="heart-icon">🎀</span>
+        <span class="heart-icon">💖</span>
+        <span class="heart-icon">🎀</span>
+      </div>
+      <div class="dual-weather" id="dualWeather">
+        <div class="weather-loading">正在查询两地天气 💕</div>
+      </div>
+    </header>
+
+    <main id="app">
+      <div class="loading">
+        <div class="loading-kitty">
+          <svg viewBox="0 0 80 64" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="22" cy="14" rx="11" ry="13" fill="white" stroke="#FF3366" stroke-width="2" transform="rotate(-20 22 14)"/>
+            <ellipse cx="58" cy="14" rx="11" ry="13" fill="white" stroke="#FF3366" stroke-width="2" transform="rotate(20 58 14)"/>
+            <ellipse cx="40" cy="38" rx="34" ry="24" fill="white" stroke="#FF3366" stroke-width="2"/>
+            <ellipse cx="28" cy="36" rx="3" ry="4" fill="#FF3366"/>
+            <ellipse cx="52" cy="36" rx="3" ry="4" fill="#FF3366"/>
+            <ellipse cx="40" cy="41" rx="4" ry="2.5" fill="#FFD700" stroke="#FF3366" stroke-width="1"/>
+            <circle cx="54" cy="10" r="5" fill="#FF3366" stroke="#FF3366" stroke-width="1"/>
+          </svg>
+        </div>
+        <p>加载中...</p>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-kitty">
+        <svg viewBox="0 0 60 48" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="17" cy="11" rx="8" ry="10" fill="white" stroke="#FF3366" stroke-width="1.5" transform="rotate(-20 17 11)"/>
+          <ellipse cx="43" cy="11" rx="8" ry="10" fill="white" stroke="#FF3366" stroke-width="1.5" transform="rotate(20 43 11)"/>
+          <ellipse cx="30" cy="29" rx="25" ry="18" fill="white" stroke="#FF3366" stroke-width="1.5"/>
+          <ellipse cx="21" cy="27" rx="2" ry="3" fill="#FF3366"/>
+          <ellipse cx="39" cy="27" rx="2" ry="3" fill="#FF3366"/>
+          <ellipse cx="30" cy="31" rx="3" ry="2" fill="#FFD700" stroke="#FF3366" stroke-width="0.8"/>
+          <circle cx="41" cy="8" r="4" fill="#FF3366"/>
+        </svg>
+      </div>
+      <p>Made with 💕 for you</p>
+      <p class="footer-note">从2026.3.27开始，我们要相约过一辈子</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+  <!-- 发送拥抱全屏动画 -->
+  <div class="hug-overlay" id="hugOverlay">
+    <canvas id="hugCanvas"></canvas>
+    <div class="hug-stage">
+      <div class="hug-kitty-left">
+        <svg viewBox="0 0 80 64" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="22" cy="14" rx="11" ry="13" fill="white" stroke="#FF3366" stroke-width="2" transform="rotate(-20 22 14)"/>
+          <ellipse cx="58" cy="14" rx="11" ry="13" fill="white" stroke="#FF3366" stroke-width="2" transform="rotate(20 58 14)"/>
+          <ellipse cx="40" cy="38" rx="34" ry="24" fill="white" stroke="#FF3366" stroke-width="2"/>
+          <ellipse cx="28" cy="36" rx="3" ry="4" fill="#FF3366"/>
+          <ellipse cx="52" cy="36" rx="3" ry="4" fill="#FF3366"/>
+          <ellipse cx="40" cy="41" rx="4" ry="2.5" fill="#FFD700" stroke="#FF3366" stroke-width="1"/>
+          <circle cx="54" cy="10" r="5" fill="#FF3366" stroke="#FF3366" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="hug-kitty-right">
+        <svg viewBox="0 0 80 64" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="22" cy="14" rx="11" ry="13" fill="white" stroke="#FF3366" stroke-width="2" transform="rotate(-20 22 14)"/>
+          <ellipse cx="58" cy="14" rx="11" ry="13" fill="white" stroke="#FF3366" stroke-width="2" transform="rotate(20 58 14)"/>
+          <ellipse cx="40" cy="38" rx="34" ry="24" fill="white" stroke="#FF3366" stroke-width="2"/>
+          <ellipse cx="28" cy="36" rx="3" ry="4" fill="#FF3366"/>
+          <ellipse cx="52" cy="36" rx="3" ry="4" fill="#FF3366"/>
+          <ellipse cx="40" cy="41" rx="4" ry="2.5" fill="#FFD700" stroke="#FF3366" stroke-width="1"/>
+          <circle cx="54" cy="10" r="5" fill="#FF3366" stroke="#FF3366" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="hug-heart-center">
+        <svg viewBox="0 0 60 54" xmlns="http://www.w3.org/2000/svg">
+          <path d="M30 48 C10 34, 2 22, 2 14 C2 6, 10 0, 18 0 C24 0, 28 4, 30 8 C32 4, 36 0, 42 0 C50 0, 58 6, 58 14 C58 22, 50 34, 30 48Z" fill="#FF3366" stroke="#FF3366" stroke-width="1.5"/>
+          <path d="M30 44 C14 32, 8 22, 8 16 C8 10, 14 6, 20 6 C24 6, 28 8, 30 12 C32 8, 36 6, 40 6 C46 6, 52 10, 52 16 C52 22, 46 32, 30 44Z" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1" transform="scale(0.7) translate(13,10)"/>
+        </svg>
+      </div>
+      <p class="hug-quote" id="hugQuote"></p>
+      <p class="hug-result">抱抱已送达！</p>
+    </div>
+  </div>
+
+</body>
+</html>
