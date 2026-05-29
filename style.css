@@ -188,7 +188,7 @@ body::before {
   display: flex;
   justify-content: center;
   padding-top: 0;
-  margin-bottom: -35px;
+  margin-bottom: -55px;
 }
 
 .kitty-head .kitty-img {
@@ -836,8 +836,7 @@ body::before {
   display: flex;
   justify-content: center;
   gap: 24px;
-  padding: 12px 0 6px;
-  margin-top: -8px;
+  padding: 16px 0;
 }
 
 .site-nav a {
