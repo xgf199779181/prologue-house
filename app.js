@@ -579,71 +579,88 @@ function weatherEmoji(code, isDay) {
 
 function renderMap() {
   const app = document.getElementById('app');
-
-  const cities = [
-    { name: '北京', x: 65, y: 18, type: 'future' },
-    { name: '武汉', x: 60, y: 48, type: 'future' },
-    { name: '郑州', x: 57, y: 40, type: 'visited' },
-    { name: '开封', x: 56, y: 39, type: 'current' },
-    { name: '上海', x: 78, y: 52, type: 'visited' },
-    { name: '大理', x: 28, y: 68, type: 'future' },
-    { name: '广州', x: 58, y: 78, type: 'current' }
-  ];
-
-  const cityDots = cities.map(c => `
-    <g class="city-dot ${c.type}" transform="translate(${c.x},${c.y})">
-      ${c.type === 'visited' ? '<circle class="city-pulse" cx="0" cy="0" r="12" fill="rgba(255,107,157,0.15)" />' : ''}
-      <circle cx="0" cy="0" r="5" />
-      <text class="city-label" x="0" y="16">${c.name}</text>
-    </g>
-  `).join('');
-
-  const connections = `
-    <line class="map-connection" x1="57" y1="40" x2="78" y2="52" />
-  `;
-
   app.innerHTML = `
     <section class="map-page">
-      <div style="max-width:800px;margin:0 auto;">
+      <div style="max-width:900px;margin:0 auto;">
         <button class="back-btn" onclick="goHome()">
           <span>←</span> 返回首页
         </button>
-
         <div class="map-header">
           <h2>🗺️ 我们的地图</h2>
           <p>走过的路，和即将走的路</p>
         </div>
-
         <div class="map-container">
-          <svg class="map-svg" viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,182,193,0.15)" stroke-width="0.5"/>
-              </pattern>
-            </defs>
-            <rect width="100" height="90" fill="url(#grid)" rx="12" />
-            ${connections}
-            ${cityDots}
-          </svg>
-
+          <div id="loveMap"></div>
           <div class="map-legend">
-            <div class="legend-item">
-              <div class="legend-dot visited"></div>
-              <span>已去过</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-dot current"></div>
-              <span>现在所在</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-dot future"></div>
-              <span>未来要去</span>
-            </div>
+            <div class="legend-item"><div class="legend-dot visited"></div><span>已去过</span></div>
+            <div class="legend-item"><div class="legend-dot current"></div><span>现在所在</span></div>
+            <div class="legend-item"><div class="legend-dot future"></div><span>未来要去</span></div>
           </div>
         </div>
       </div>
     </section>
   `;
+  loadLeaflet(() => initLeafletMap());
+}
+
+function loadLeaflet(callback) {
+  if (window.L) { callback(); return; }
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+  document.head.appendChild(link);
+  const script = document.createElement('script');
+  script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+  script.onload = callback;
+  document.head.appendChild(script);
+}
+
+function initLeafletMap() {
+  const map = L.map('loveMap', {
+    zoomControl: false,
+    attributionControl: false
+  }).setView([33, 108], 4);
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    maxZoom: 19
+  }).addTo(map);
+
+  const cities = [
+    { name: '北京', lat: 39.9, lng: 116.4, type: 'future' },
+    { name: '武汉', lat: 30.6, lng: 114.3, type: 'future' },
+    { name: '郑州', lat: 34.8, lng: 113.6, type: 'visited' },
+    { name: '开封', lat: 34.8, lng: 114.3, type: 'current' },
+    { name: '上海', lat: 31.2, lng: 121.5, type: 'visited' },
+    { name: '大理', lat: 25.6, lng: 100.2, type: 'future' },
+    { name: '广州', lat: 23.1, lng: 113.3, type: 'current' }
+  ];
+
+  const colors = { visited: '#FF6B9D', current: '#9B59B6', future: '#D5A6BD' };
+
+  cities.forEach(c => {
+    const color = colors[c.type];
+    const icon = L.divIcon({
+      className: 'custom-map-marker',
+      html: `<div class="map-pin" style="background:${color};border-color:${color};"></div>`,
+      iconSize: [14, 14],
+      iconAnchor: [7, 7]
+    });
+    const marker = L.marker([c.lat, c.lng], { icon: icon }).addTo(map);
+    marker.bindTooltip(c.name, {
+      permanent: true,
+      direction: 'bottom',
+      className: 'map-city-label',
+      offset: [0, 8]
+    });
+  });
+
+  // 连线：郑州 -> 上海
+  L.polyline([[34.8, 113.6], [31.2, 121.5]], {
+    color: '#FF6B9D',
+    weight: 2,
+    opacity: 0.5,
+    dashArray: '6, 6'
+  }).addTo(map);
 }
 
 function initNav() {
