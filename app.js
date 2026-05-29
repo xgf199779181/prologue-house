@@ -468,7 +468,7 @@ function initMapButton() {
   });
 }
 
-/* 情话池 */
+/* 情话池 —— 100条 */
 const HUG_QUOTES = [
   "我把整个宇宙的温柔，都给你",
   "不管多远，我的心永远在你那边",
@@ -477,36 +477,139 @@ const HUG_QUOTES = [
   "想你的时候，连空气都是甜的",
   "遇见你之前，我不知道自己可以这样深爱一个人",
   "从热烈的心动，到安稳的心安，都是你",
-  "我们要相约过一辈子，这不是托词，是承诺"
+  "我们要相约过一辈子，这不是托词，是承诺",
+  "世间万物皆苦，你明目张胆的偏爱就是救赎",
+  "我见过银河，但我只爱一颗星星",
+  "你是我绕过山河错落，才找到的人间烟火",
+  "我喜欢你，就像sin²加cos²，始终如一",
+  "遇见你之后，我的伟大抱负都变成了和你在一起的黄昏与清晨",
+  "你站的方向，连风吹过来都是暖的",
+  "你是我所有的少女情怀和心之所向",
+  "万物皆有不同，比如我有你，而他们没有",
+  "我喜欢你，胜于昨日，略匮明朝",
+  "我寻了半生的春天，你一笑，便是了",
+  "我的每一支笔，都知道你的名字",
+  "醒来觉得甚是爱你",
+  "你是年少的欢喜，这句话反过来也是你",
+  "我想和你互相浪费，一起虚度短的沉默和长的无意义",
+  "山河远阔，人间烟火，无一是你，无一不是你",
+  "我想和你一起生活，在某个小镇，共享无尽的黄昏",
+  "为你，千千万万遍",
+  "春风十里不如你",
+  "愿你一生努力，一生被爱",
+  "你的眼睛真好看，里面有晴雨、日月、山川，但我的更好看，因为里面有你",
+  "自从遇见你，人生苦短，甜长",
+  "我想见你，不远万里",
+  "不思进取，思你",
+  "除了先生的美色，不接受任何贿赂",
+  "我要做你床头的小熊，为你打败梦里的恶龙",
+  "你是我温暖的手套，冰冷的啤酒，带着阳光味道的衬衫",
+  "你是我患得患失的梦，我是你可有可无的人",
+  "我想和你一起走很长很长的路，不问归期",
+  "你是我这一生，等了半世未拆的礼物",
+  "在所有人事已非的景色里，我最喜欢你",
+  "你是我想和全世界炫耀，却又舍不得和任何人分享的人",
+  "平生一顾，至此终年",
+  "斯人若彩虹，遇上方知有",
+  "我想把世界上最好的都给你，却发现世界上最好的就是你",
+  "海底月是天上月，眼前人是心上人",
+  "玲珑骰子安红豆，入骨相思知不知",
+  "山有木兮木有枝，心悦君兮君不知",
+  "愿我如星君如月，夜夜流光相皎洁",
+  "平生不会相思，才会相思，便害相思",
+  "只愿君心似我心，定不负相思意",
+  "两情若是久长时，又岂在朝朝暮暮",
+  "执子之手，与子偕老",
+  "山有峰顶，海有彼岸，我有你",
+  "你是我明目张胆的偏爱，也是我众所周知的私心",
+  "想和你一起看日出，也想和你一起等日落",
+  "我想成为你最喜欢见到，和最舍不得说再见的那个人",
+  "你是我退去新鲜感仍然心动的人",
+  "一想到能和你共度余生，我就对余生充满期待",
+  "我本无意穿堂风，偏偏孤倨引山洪",
+  "你一笑，我的世界就亮了",
+  "遇见你，是所有故事的开始",
+  "你是我心上的月亮，也是我命里的光",
+  "我想陪你从新鲜感走到归属感和安全感",
+  "自从喜欢你，我的PH值总是小于7",
+  "你是我拔掉氧气罐都想亲吻的人",
+  "众生皆苦，唯你是草莓味",
+  "铃铛遇到风会响，我遇见你，心里的小鹿会乱撞",
+  "我要露出点小马脚来，好让你知道我喜欢你",
+  "今天的风很温柔，像极了你对我笑的时候",
+  "我所有的秒回，不是我很闲，而是你很重",
+  "你是我跑完八百米也想拥抱的人",
+  "月亮不会奔你而来，但我会",
+  "今晚月色真美，风也温柔",
+  "你是我宇宙限量版的快乐",
+  "我不想做你的路人甲，我想做你的余生",
+  "等风来不如追风去，追风去不如追你",
+  "我对先生的喜欢，何止是钟意二字",
+  "你是我这一生只会遇见一次的惊喜",
+  "世界很暗，然后你来了，带着星星和月亮",
+  "如果人类有尾巴，我见到你一定会摇个不停",
+  "遇见你之前，我没想过结婚；遇见你之后，结婚没想过别人",
+  "你是我电量只剩1%也想回消息的人",
+  "众生皆草木，唯你是青山",
+  "我想你一定很忙，所以只看前三个字就好",
+  "你是我所有温柔的来源和归属",
+  "我曾踏月而来，只因你在山中",
+  "人间本不该令我这么欣喜，但是你来了",
+  "我喜欢你已经超过两分钟了，不能撤回了",
+  "世界那么大，而我真正想落脚的地方，是你的身旁",
+  "你是我散落人间的日常，三三两两",
+  "你是我日记里最重要的那页，也是我余生的关键词",
+  "我想和你虚度时光，比如低头看鱼",
+  "你是生活扑面而来的善意",
+  "我的喜欢好明显，你的不喜欢也是",
+  "你是我绕过人间山河，才遇到的人间烟火",
+  "你是我这一生等了半世未拆的礼物",
+  "遇见你爱意汹涌，看世间万物都浪漫心动",
+  "你是我遥遥万里最牵挂的，也是给岁月最温柔的答案",
+  "我喜欢你，不是情话，是心里话",
+  "遇见你时，导航说：您已到达目的地"
 ];
 
 function sendHug() {
   const overlay = document.getElementById('hugOverlay');
   if (!overlay) return;
 
-  // 重置动画
-  const kitties = overlay.querySelectorAll('.hug-kitty-left, .hug-kitty-right, .hug-heart-center, .hug-quote, .hug-result');
-  kitties.forEach(el => {
-    el.style.animation = 'none';
-    void el.offsetWidth;
-    el.style.animation = '';
-  });
+  // 清除旧定时器防止重复
+  if (overlay._hugCloseTimer) { clearTimeout(overlay._hugCloseTimer); overlay._hugCloseTimer = null; }
+
+  // 重置状态
+  const heartGlow = document.getElementById('hugHeartGlow');
+  const hugEmoji = document.getElementById('hugHugEmoji');
   const quoteEl = document.getElementById('hugQuote');
-  if (quoteEl) { quoteEl.textContent = ''; quoteEl.classList.remove('typing'); }
+  const resultEl = overlay.querySelector('.hug-result');
+  if (heartGlow) { heartGlow.classList.remove('show'); heartGlow.style.animation = 'none'; }
+  if (hugEmoji) { hugEmoji.classList.remove('show'); hugEmoji.style.animation = 'none'; }
+  if (quoteEl) { quoteEl.textContent = ''; quoteEl.classList.remove('typing'); quoteEl.style.opacity = '0'; }
+  if (resultEl) { resultEl.style.animation = 'none'; resultEl.style.opacity = '0'; }
 
   overlay.classList.add('active');
 
-  // 启动粒子风暴
-  startHugParticles();
+  // 启动爱心烟花
+  startHugFireworks(() => {
+    // 烟花结束后：大爱心 + 抱抱emoji 一起弹出
+    if (heartGlow) { heartGlow.style.animation = ''; heartGlow.classList.add('show'); }
+    if (hugEmoji) { hugEmoji.style.animation = ''; hugEmoji.classList.add('show'); }
+    if (resultEl) {
+      void resultEl.offsetWidth;
+      resultEl.style.animation = 'fadeInUp 0.8s ease forwards';
+    }
+    const quote = HUG_QUOTES[Math.floor(Math.random() * HUG_QUOTES.length)];
+    const typeTime = quote.length * 65 + 500; // 打字时间 + 缓冲
+    typeHugQuote(quote);
 
-  // 随机情话打字机
-  const quote = HUG_QUOTES[Math.floor(Math.random() * HUG_QUOTES.length)];
-  typeHugQuote(quote);
-
-  setTimeout(() => {
-    overlay.classList.remove('active');
-    stopHugParticles();
-  }, 4000);
+    // 打完字后再看1.5秒才关
+    overlay._hugCloseTimer = setTimeout(() => {
+      overlay.classList.remove('active');
+      stopHugFireworks();
+      if (heartGlow) heartGlow.classList.remove('show');
+      if (hugEmoji) hugEmoji.classList.remove('show');
+    }, typeTime + 1500);
+  });
 }
 
 function typeHugQuote(text) {
@@ -515,7 +618,7 @@ function typeHugQuote(text) {
   el.classList.add('typing');
   el.textContent = '';
   let i = 0;
-  const speed = 70;
+  const speed = 65;
   function type() {
     if (i < text.length) {
       el.textContent += text.charAt(i);
@@ -523,104 +626,189 @@ function typeHugQuote(text) {
       setTimeout(type, speed);
     }
   }
-  setTimeout(type, 1500);
+  setTimeout(type, 300);
 }
 
-/* Canvas 粒子风暴 */
-let hugParticleAnim = null;
+/* ═══════════════════════════════════════════════════════════ */
+/*  Canvas 爱心烟花秀                                              */
+/* ═══════════════════════════════════════════════════════════ */
 
-function startHugParticles() {
+let hugFireworkAnim = null;
+
+function startHugFireworks(onComplete) {
   const canvas = document.getElementById('hugCanvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  const W = canvas.width = window.innerWidth;
+  const H = canvas.height = window.innerHeight;
+  const cx = W / 2, cy = H / 2;
 
+  const colors = ['#FF3366','#FF6B9D','#FFD700','#FF99CC','#FF6699','#FFB6C1','#FF1493','#FF85A2'];
+  const fireworks = [];
   const particles = [];
-  const colors = ['#FF3366', '#FF6B9D', '#FFD700', '#FF99CC', '#FF6699', '#FFB6C1'];
-  const cx = canvas.width / 2;
-  const cy = canvas.height / 2;
+  let launched = 0;
+  let exploded = 0;
+  const totalFireworks = 5;
 
-  // 初始化粒子（从四周飞向中心）
-  for (let i = 0; i < 80; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const dist = Math.max(canvas.width, canvas.height) * 0.6 + Math.random() * 200;
-    particles.push({
-      x: cx + Math.cos(angle) * dist,
-      y: cy + Math.sin(angle) * dist,
-      tx: cx,
-      ty: cy,
-      size: 2 + Math.random() * 5,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      speed: 2 + Math.random() * 4,
-      angle: angle,
-      dist: dist,
-      phase: 'flyIn', // flyIn → explode → fade
-      life: 0,
-      vx: 0, vy: 0
+  // 爱心参数方程归一化
+  function heartPoint(t, scale) {
+    const x = 16 * Math.pow(Math.sin(t), 3);
+    const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+    return { x: x * scale, y: y * scale };
+  }
+
+  // 发射一个烟花火箭
+  function launchFirework() {
+    const fx = 80 + Math.random() * (W - 160);
+    const targetY = H * 0.25 + Math.random() * H * 0.2;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    fireworks.push({
+      x: fx, y: H,
+      tx: fx, ty: targetY,
+      vx: 0, vy: -(6 + Math.random() * 4),
+      color: color,
+      trail: [],
+      dead: false
     });
+    launched++;
+  }
+
+  // 爆炸成爱心形状
+  function explode(fw) {
+    const count = 50;
+    const scale = 4 + Math.random() * 3;
+    const baseAngle = Math.random() * Math.PI * 2;
+    for (let i = 0; i < count; i++) {
+      const t = (i / count) * Math.PI * 2;
+      const hp = heartPoint(t, scale);
+      // 添加小随机扰动让爱心更自然
+      const px = fw.x + hp.x + (Math.random() - 0.5) * 6;
+      const py = fw.y + hp.y + (Math.random() - 0.5) * 6;
+      const angle = Math.atan2(hp.y, hp.x) + baseAngle;
+      const speed = 1.5 + Math.random() * 3;
+      particles.push({
+        x: px, y: py,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        color: fw.color,
+        size: 2 + Math.random() * 3,
+        life: 1,
+        gravity: 0.04,
+        drag: 0.97,
+        phase: 'explode'
+      });
+    }
+    // 额外中心闪光粒子
+    for (let i = 0; i < 15; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const s = 1 + Math.random() * 3;
+      particles.push({
+        x: fw.x, y: fw.y,
+        vx: Math.cos(a) * s,
+        vy: Math.sin(a) * s,
+        color: '#fff',
+        size: 1 + Math.random() * 2,
+        life: 1,
+        gravity: 0.02,
+        drag: 0.95,
+        phase: 'explode'
+      });
+    }
+    exploded++;
   }
 
   let frame = 0;
+  let completeFired = false;
+  let lastExplodeFrame = -999;
 
   function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // 拖尾渐隐
+    ctx.fillStyle = 'rgba(30,10,20,0.25)';
+    ctx.fillRect(0, 0, W, H);
     frame++;
 
-    let activeCount = 0;
-    particles.forEach(p => {
-      if (p.phase === 'flyIn') {
-        const dx = p.tx - p.x;
-        const dy = p.ty - p.y;
-        const d = Math.sqrt(dx * dx + dy * dy);
-        if (d < 15 || frame > 90) {
-          p.phase = 'explode';
-          const explodeAngle = Math.random() * Math.PI * 2;
-          const explodeSpeed = 3 + Math.random() * 6;
-          p.vx = Math.cos(explodeAngle) * explodeSpeed;
-          p.vy = Math.sin(explodeAngle) * explodeSpeed;
-          p.life = 1;
-        } else {
-          p.x += (dx / d) * p.speed;
-          p.y += (dy / d) * p.speed;
+    // 发射新烟花
+    if (launched < totalFireworks && frame % 18 === 0) {
+      launchFirework();
+    }
+
+    // 更新火箭
+    for (let i = fireworks.length - 1; i >= 0; i--) {
+      const f = fireworks[i];
+      f.trail.push({ x: f.x, y: f.y, life: 1 });
+      if (f.trail.length > 12) f.trail.shift();
+      f.x += f.vx;
+      f.y += f.vy;
+      f.vy += 0.08; // 微重力
+
+      // 画拖尾
+      for (let j = 0; j < f.trail.length; j++) {
+        const t = f.trail[j];
+        t.life -= 0.08;
+        if (t.life > 0) {
+          ctx.globalAlpha = t.life * 0.6;
+          ctx.fillStyle = f.color;
+          ctx.beginPath();
+          ctx.arc(t.x, t.y, 2, 0, Math.PI * 2);
+          ctx.fill();
         }
-      } else if (p.phase === 'explode') {
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vx *= 0.96;
-        p.vy *= 0.96;
-        p.life -= 0.012;
-        if (p.life <= 0) p.phase = 'dead';
       }
 
-      if (p.phase !== 'dead') {
-        activeCount++;
-        ctx.globalAlpha = p.phase === 'explode' ? p.life : Math.min(1, p.dist / 200);
-        ctx.fillStyle = p.color;
-        ctx.beginPath();
-        // 画爱心
-        const s = p.size;
-        const hx = p.x, hy = p.y;
-        ctx.moveTo(hx, hy + s * 0.3);
-        ctx.bezierCurveTo(hx - s * 0.5, hy - s * 0.3, hx - s, hy + s * 0.1, hx, hy + s * 0.8);
-        ctx.bezierCurveTo(hx + s, hy + s * 0.1, hx + s * 0.5, hy - s * 0.3, hx, hy + s * 0.3);
-        ctx.fill();
+      if (f.y <= f.ty || f.vy >= 0) {
+        explode(f);
+        fireworks.splice(i, 1);
+        lastExplodeFrame = frame;
       }
-    });
+    }
+
+    // 更新粒子
+    let alive = 0;
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += p.gravity;
+      p.vx *= p.drag;
+      p.vy *= p.drag;
+      p.life -= 0.012;
+
+      if (p.life <= 0) {
+        particles.splice(i, 1);
+        continue;
+      }
+      alive++;
+
+      ctx.globalAlpha = p.life;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      // 画小爱心
+      const s = p.size * p.life;
+      ctx.moveTo(p.x, p.y + s * 0.3);
+      ctx.bezierCurveTo(p.x - s * 0.5, p.y - s * 0.3, p.x - s, p.y + s * 0.1, p.x, p.y + s * 0.8);
+      ctx.bezierCurveTo(p.x + s, p.y + s * 0.1, p.x + s * 0.5, p.y - s * 0.3, p.x, p.y + s * 0.3);
+      ctx.fill();
+    }
 
     ctx.globalAlpha = 1;
-    if (activeCount > 0) {
-      hugParticleAnim = requestAnimationFrame(draw);
+
+    // 所有烟花都爆炸完毕后延迟40帧触发完成回调
+    if (!completeFired && exploded >= totalFireworks && frame - lastExplodeFrame > 40) {
+      completeFired = true;
+      if (onComplete) onComplete();
+    }
+
+    if (frame < 300 || alive > 0 || fireworks.length > 0) {
+      hugFireworkAnim = requestAnimationFrame(draw);
     }
   }
 
-  hugParticleAnim = requestAnimationFrame(draw);
+  hugFireworkAnim = requestAnimationFrame(draw);
 }
 
-function stopHugParticles() {
-  if (hugParticleAnim) {
-    cancelAnimationFrame(hugParticleAnim);
-    hugParticleAnim = null;
+function stopHugFireworks() {
+  if (hugFireworkAnim) {
+    cancelAnimationFrame(hugFireworkAnim);
+    hugFireworkAnim = null;
   }
   const canvas = document.getElementById('hugCanvas');
   if (canvas) {

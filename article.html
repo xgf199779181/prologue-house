@@ -55,34 +55,20 @@
   <div class="hug-overlay" id="hugOverlay">
     <canvas id="hugCanvas"></canvas>
     <div class="hug-stage">
-      <div class="hug-kitty-left">
-        <svg viewBox="0 0 80 64" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="22" cy="14" rx="11" ry="13" fill="white" stroke="#FF3366" stroke-width="2" transform="rotate(-20 22 14)"/>
-          <ellipse cx="58" cy="14" rx="11" ry="13" fill="white" stroke="#FF3366" stroke-width="2" transform="rotate(20 58 14)"/>
-          <ellipse cx="40" cy="38" rx="34" ry="24" fill="white" stroke="#FF3366" stroke-width="2"/>
-          <ellipse cx="28" cy="36" rx="3" ry="4" fill="#FF3366"/>
-          <ellipse cx="52" cy="36" rx="3" ry="4" fill="#FF3366"/>
-          <ellipse cx="40" cy="41" rx="4" ry="2.5" fill="#FFD700" stroke="#FF3366" stroke-width="1"/>
-          <circle cx="54" cy="10" r="5" fill="#FF3366" stroke="#FF3366" stroke-width="1"/>
-        </svg>
-      </div>
-      <div class="hug-kitty-right">
-        <svg viewBox="0 0 80 64" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="22" cy="14" rx="11" ry="13" fill="white" stroke="#FF3366" stroke-width="2" transform="rotate(-20 22 14)"/>
-          <ellipse cx="58" cy="14" rx="11" ry="13" fill="white" stroke="#FF3366" stroke-width="2" transform="rotate(20 58 14)"/>
-          <ellipse cx="40" cy="38" rx="34" ry="24" fill="white" stroke="#FF3366" stroke-width="2"/>
-          <ellipse cx="28" cy="36" rx="3" ry="4" fill="#FF3366"/>
-          <ellipse cx="52" cy="36" rx="3" ry="4" fill="#FF3366"/>
-          <ellipse cx="40" cy="41" rx="4" ry="2.5" fill="#FFD700" stroke="#FF3366" stroke-width="1"/>
-          <circle cx="54" cy="10" r="5" fill="#FF3366" stroke="#FF3366" stroke-width="1"/>
-        </svg>
-      </div>
-      <div class="hug-heart-center">
+      <div class="hug-heart-glow" id="hugHeartGlow">
         <svg viewBox="0 0 60 54" xmlns="http://www.w3.org/2000/svg">
-          <path d="M30 48 C10 34, 2 22, 2 14 C2 6, 10 0, 18 0 C24 0, 28 4, 30 8 C32 4, 36 0, 42 0 C50 0, 58 6, 58 14 C58 22, 50 34, 30 48Z" fill="#FF3366" stroke="#FF3366" stroke-width="1.5"/>
-          <path d="M30 44 C14 32, 8 22, 8 16 C8 10, 14 6, 20 6 C24 6, 28 8, 30 12 C32 8, 36 6, 40 6 C46 6, 52 10, 52 16 C52 22, 46 32, 30 44Z" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1" transform="scale(0.7) translate(13,10)"/>
+          <defs>
+            <radialGradient id="heartGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#FF6699" stop-opacity="0.9"/>
+              <stop offset="50%" stop-color="#FF3366" stop-opacity="0.6"/>
+              <stop offset="100%" stop-color="#FF3366" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <path d="M30 48 C10 34, 2 22, 2 14 C2 6, 10 0, 18 0 C24 0, 28 4, 30 8 C32 4, 36 0, 42 0 C50 0, 58 6, 58 14 C58 22, 50 34, 30 48Z" fill="#FF85A2" stroke="none"/>
+          <circle cx="30" cy="24" r="35" fill="url(#heartGlow)" opacity="0.6"/>
         </svg>
       </div>
+      <div class="hug-hug-emoji" id="hugHugEmoji">🤗</div>
       <p class="hug-quote" id="hugQuote"></p>
       <p class="hug-result">抱抱已送达！</p>
     </div>
