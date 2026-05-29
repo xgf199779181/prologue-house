@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initLoveCounter();
     initWeather();
     initNav();
+    initMapButton();
     loadData();
   }
 });
@@ -433,6 +434,19 @@ function initHugButton() {
   btn.addEventListener('click', (e) => {
     e.stopPropagation();
     sendHug();
+  });
+}
+
+function initMapButton() {
+  const btn = document.createElement('a');
+  btn.className = 'map-toggle';
+  btn.innerHTML = '🗺️';
+  btn.title = '我们的地图';
+  btn.href = 'map.html';
+  document.body.appendChild(btn);
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
   });
 }
 
