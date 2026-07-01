@@ -19,7 +19,8 @@ const ANNIVERSARIES = {
 
 const MILESTONES = [
   { date: '2026-04-23', title: '郑州初见', icon: '✨' },
-  { date: '2026-05-14', title: '上海之行', icon: '✨' }
+  { date: '2026-05-14', title: '上海之行', icon: '✨' },
+  { date: '2026-06-27', title: '广州之行', icon: '✨' }
 ];
 
 /* fallback 数据：当直接用 file:// 打开时 fetch 会失败，自动使用内嵌数据 */
@@ -921,6 +922,7 @@ function renderMap() {
           <div class="map-legend">
             <div class="legend-item"><div class="legend-dot visited"></div><span>已去过</span></div>
             <div class="legend-item"><div class="legend-dot current"></div><span>现在所在</span></div>
+            <div class="legend-item"><div class="legend-dot mixed"></div><span>现在所在 + 已去过</span></div>
             <div class="legend-item"><div class="legend-dot future"></div><span>未来要去</span></div>
           </div>
         </div>
@@ -958,17 +960,21 @@ function initLeafletMap() {
     { name: '郑州', lat: 34.8, lng: 113.6, type: 'visited' },
     { name: '开封', lat: 34.8, lng: 114.3, type: 'current' },
     { name: '上海', lat: 31.2, lng: 121.5, type: 'visited' },
-    { name: '大理', lat: 25.6, lng: 100.2, type: 'future' },
-    { name: '广州', lat: 23.1, lng: 113.3, type: 'current' }
+    { name: '广州', lat: 23.1, lng: 113.3, type: 'current+visited' },
+    { name: '大理', lat: 25.6, lng: 100.2, type: 'future' }
   ];
 
   const colors = { visited: '#FF6B9D', current: '#9B59B6', future: '#D5A6BD' };
 
   cities.forEach(c => {
-    const color = colors[c.type];
+    const isMixed = c.type === 'current+visited';
+    const mainColor = isMixed ? colors.current : colors[c.type];
+    const html = isMixed
+      ? `<div class="map-pin" style="background:${mainColor};border-color:${mainColor};"><div class="map-pin-inner" style="background:${colors.visited};"></div></div>`
+      : `<div class="map-pin" style="background:${mainColor};border-color:${mainColor};"></div>`;
     const icon = L.divIcon({
       className: 'custom-map-marker',
-      html: `<div class="map-pin" style="background:${color};border-color:${color};"></div>`,
+      html: html,
       iconSize: [14, 14],
       iconAnchor: [7, 7]
     });
@@ -981,8 +987,8 @@ function initLeafletMap() {
     });
   });
 
-  // 连线：郑州 -> 上海
-  L.polyline([[34.8, 113.6], [31.2, 121.5]], {
+  // 连线：郑州 -> 上海 -> 广州
+  L.polyline([[34.8, 113.6], [31.2, 121.5], [23.1, 113.3]], {
     color: '#FF6B9D',
     weight: 2,
     opacity: 0.5,

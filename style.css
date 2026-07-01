@@ -1287,10 +1287,21 @@ body::before {
   border: 2.5px solid #fff;
   box-shadow: 0 2px 8px rgba(0,0,0,0.25);
   transition: transform 0.3s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .map-pin:hover {
   transform: scale(1.6);
+}
+
+.map-pin-inner {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 .map-city-label {
@@ -1329,6 +1340,16 @@ body::before {
 .legend-dot.visited { background: var(--pink-primary); box-shadow: 0 0 6px rgba(255,107,157,0.5); }
 .legend-dot.current { background: #9B59B6; }
 .legend-dot.future { background: #D5A6BD; opacity: 0.7; }
+.legend-dot.mixed { background: #9B59B6; position: relative; }
+.legend-dot.mixed::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--pink-primary);
+}
 
 /* ── 手写字体优化 ── */
 .article-content .content-block.text {
