@@ -98,7 +98,7 @@
       "id": "guangzhou-0630",
       "title": "她在拍她的小蛋糕，我在看我的全世界",
       "date": "2026-06-30",
-      "cover": "assets/article_0630_1.jpg",
+      "cover": "assets/article_0630_v2_1.jpg",
       "summary": "爱就是在一起，吃很多很多顿饭。纪念我们的第一次广州之行。",
       "content": [
         {
@@ -121,15 +121,15 @@
         {
           "type": "gallery",
           "images": [
-            "assets/article_0630_1.jpg",
-            "assets/article_0630_2.jpg",
-            "assets/article_0630_3.jpg",
-            "assets/article_0630_4.jpg",
-            "assets/article_0630_5.jpg",
-            "assets/article_0630_6.jpg",
-            "assets/article_0630_7.jpg",
-            "assets/article_0630_8.jpg",
-            "assets/article_0630_9.jpg"
+            "assets/article_0630_v2_1.jpg",
+            "assets/article_0630_v2_2.jpg",
+            "assets/article_0630_v2_3.jpg",
+            "assets/article_0630_v2_4.jpg",
+            "assets/article_0630_v2_5.jpg",
+            "assets/article_0630_v2_6.jpg",
+            "assets/article_0630_v2_7.jpg",
+            "assets/article_0630_v2_8.jpg",
+            "assets/article_0630_v2_9.jpg"
           ]
         }
       ]
