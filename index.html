@@ -16,7 +16,7 @@
   <div class="page-wrapper">
     <!-- Hello Kitty 头部 -->
     <div class="kitty-head">
-      <img src="assets/kitty_header.png" alt="Hello Kitty" class="kitty-img">
+      <img src="assets/kitty_header.png" alt="Hello Kitty" class="kitty-img" data-cdn-src="https://cdn.jsdelivr.net/gh/xgf199779181/prologue-house@main/assets/kitty_header.png">
     </div>
 
     <header class="site-header">
@@ -79,6 +79,14 @@
     </footer>
   </div>
 
+  <script>
+    // 国内访问加速：非 file:// 模式下使用 jsDelivr CDN
+    if (window.location.protocol !== 'file:') {
+      document.querySelectorAll('[data-cdn-src]').forEach(img => {
+        img.src = img.dataset.cdnSrc;
+      });
+    }
+  </script>
   <script src="app.js"></script>
   <!-- 发送拥抱全屏动画 -->
   <div class="hug-overlay" id="hugOverlay">

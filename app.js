@@ -6,6 +6,28 @@
 let blogData = null;
 const CURRENT_PAGE = document.body.dataset.page || 'home';
 
+/* CDN 配置：国内通过 jsDelivr 加载 GitHub 资源 */
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/xgf199779181/prologue-house@main';
+function cdnUrl(path) {
+  if (typeof path !== 'string') return path;
+  if (path.startsWith('http')) return path;
+  if (path.startsWith('/')) return path;
+  return CDN_BASE + '/' + path;
+}
+
+/* 本地开发或 file:// 打开时使用相对路径 */
+function localUrl(path) {
+  if (typeof path !== 'string') return path;
+  if (path.startsWith('http')) return path;
+  if (path.startsWith('/')) return path;
+  return path;
+}
+
+/* 根据当前协议自动选择 CDN 或本地路径 */
+function assetUrl(path) {
+  return window.location.protocol === 'file:' ? localUrl(path) : cdnUrl(path);
+}
+
 /* 页面离开时保存滚动位置 */
 window.addEventListener('beforeunload', () => {
   sessionStorage.setItem('scroll_' + CURRENT_PAGE, window.scrollY);
@@ -171,11 +193,19 @@ function initBGM() {
   document.body.appendChild(btn);
 
   const audio = new Audio();
-  // 主人把音乐文件放进 assets/ 文件夹，然后修改下面的路径
-  // 例孮：audio.src = 'assets/bgm.mp3';
-  audio.src = 'assets/bgm.mp3';
+  // 首页不卡顿：先空 src，页面加载完成后再异步加载 BGM
+  audio.preload = 'none';
+  audio.src = '';
   audio.loop = true;
   audio.volume = 0.3;
+
+  // 页面加载完成后异步加载 BGM，不阻塞首页渲染
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      audio.src = assetUrl('assets/bgm.mp3');
+      audio.load();
+    }, 100);
+  });
 
   let playing = false;
 
@@ -293,13 +323,13 @@ function renderTimeline() {
     const dotLabel = anni ? ` data-label="${anni.label}"` : '';
 
     const coverHTML = item.cover
-      ? `<img class="card-cover" src="${escapeHtml(item.cover)}" alt="${escapeHtml(item.title)}" loading="lazy">`
+      ? `<img class="card-cover" src="${escapeHtml(assetUrl(item.cover))}" alt="${escapeHtml(item.title)}" loading="lazy">`
       : '';
 
     return `
       <div class="timeline-item">
         <div class="${dotClass}"${dotLabel}>
-          <img src="assets/kitty_header.png" alt="Hello Kitty">
+          <img src="${escapeHtml(assetUrl('assets/kitty_header.png'))}" alt="Hello Kitty">
         </div>
         <div class="timeline-card" onclick="navigateToArticle('${escapeHtml(item.id)}')">
           ${coverHTML}
@@ -413,7 +443,7 @@ function renderContentBlock(block, index) {
       if (images.length === 0) return '';
       const gridItems = images.map(src => `
         <div class="gallery-item">
-          <img src="${escapeHtml(src)}" alt="" loading="lazy">
+          <img src="${escapeHtml(assetUrl(src))}" alt="" loading="lazy">
         </div>
       `).join('');
       return `
@@ -426,7 +456,7 @@ function renderContentBlock(block, index) {
     case 'image':
       return `
         <div class="content-block image">
-          <img src="${escapeHtml(block.src || '')}" alt="${escapeHtml(block.caption || '')}" loading="lazy">
+          <img src="${escapeHtml(assetUrl(block.src || ''))}" alt="${escapeHtml(block.caption || '')}" loading="lazy">
           ${block.caption ? `<div class="image-caption">${escapeHtml(block.caption)}</div>` : ''}
         </div>
       `;
@@ -434,8 +464,8 @@ function renderContentBlock(block, index) {
     case 'video':
       return `
         <div class="content-block video">
-          <video controls preload="metadata" poster="${escapeHtml(block.poster || '')}">
-            <source src="${escapeHtml(block.src || '')}" type="video/mp4">
+          <video controls preload="metadata" poster="${escapeHtml(assetUrl(block.poster || ''))}">
+            <source src="${escapeHtml(assetUrl(block.src || ''))}" type="video/mp4">
             您的浏览器不支持视频播放。
           </video>
           ${block.caption ? `<div class="video-caption">${escapeHtml(block.caption)}</div>` : ''}
@@ -911,6 +941,9 @@ async function initWeather() {
     { name: '开封', lat: 34.79, lon: 114.35 },
     { name: '广州', lat: 23.13, lon: 113.26 }
   ];
+
+  // 先显示查询中，不阻塞首页渲染
+  container.innerHTML = '<div class="weather-card"><div class="weather-loading">正在查询两地天气 💕</div></div>';
 
   try {
     const results = await Promise.all(
