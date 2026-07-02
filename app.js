@@ -60,8 +60,32 @@ const FALLBACK_DATA = {
         { "type": "text", "value": "无论如何，我唯一的念头就是：不能错过你。遇见你之前，我不知道自己可以这样深爱一个人；遇见你之后，我只想用往后所有的时光来证明——这份爱会从热烈的心动，变成安稳的心安。" },
         { "type": "text", "value": "所以，崽崽，你说好不好？从这一岁开始，到往后的每一岁，都让我陪在你身边。<i>I promise to love you, not just on your birthday, but every single day. Not just when we're together, but across every mile between us.</i>" },
         { "type": "image", "src": "assets/article_0601_2.png", "caption": "" },
-        { "type": "text", "value": "生日快乐，崽崽。下一站，我们一起去哪里吃好吃的？" },
+        { "type": "text", "value": "生日快乐，崆崆。下一站，我们一起去哪里吃好吃的？" },
         { "type": "text", "value": "<b>永远爱你的bb</b>" }
+      ]
+    },
+    {
+      "id": "guangzhou-0630",
+      "title": "她在拍她的小蛋糕，我在看我的全世界",
+      "date": "2026-06-30",
+      "cover": "assets/article_0630_1.jpg",
+      "summary": "爱就是在一起，吃很多很多顿饭。纪念我们的第一次广州之行。",
+      "content": [
+        { "type": "with-you" },
+        { "type": "emoji-line", "value": "👧 ❤️ 👦" },
+        { "type": "text", "value": "爱就是在一起 吃很多很多顿饭", "center": true },
+        { "type": "text", "value": "纪念我们的第一次广州之行", "center": true },
+        { "type": "gallery", "images": [
+          "assets/article_0630_1.jpg",
+          "assets/article_0630_2.jpg",
+          "assets/article_0630_3.jpg",
+          "assets/article_0630_4.jpg",
+          "assets/article_0630_5.jpg",
+          "assets/article_0630_6.jpg",
+          "assets/article_0630_7.jpg",
+          "assets/article_0630_8.jpg",
+          "assets/article_0630_9.jpg"
+        ]}
       ]
     }
   ]
@@ -364,10 +388,40 @@ function renderContentBlock(block, index) {
   if (!block || !block.type) return '';
 
   switch (block.type) {
-    case 'text':
+    case 'text': {
       const isFirst = index === 0;
       const twClass = isFirst ? ' typewriter-target' : '';
-      return `<div class="content-block text${twClass}" data-tw="${isFirst ? '1' : '0'}">${allowSafeHtml(block.value || '').replace(/\n/g, '<br>')}</div>`;
+      const centerClass = block.center ? ' center-align' : '';
+      return `<div class="content-block text${twClass}${centerClass}" data-tw="${isFirst ? '1' : '0'}">${allowSafeHtml(block.value || '').replace(/\n/g, '<br>')}</div>`;
+    }
+
+    case 'with-you':
+      return `
+        <div class="content-block with-you">
+          <span class="with-you-text">With you</span>
+          <span class="with-you-heart">💕</span>
+        </div>
+      `;
+
+    case 'emoji-line':
+      return `
+        <div class="content-block emoji-line">${escapeHtml(block.value || '')}</div>
+      `;
+
+    case 'gallery': {
+      const images = Array.isArray(block.images) ? block.images : [];
+      if (images.length === 0) return '';
+      const gridItems = images.map(src => `
+        <div class="gallery-item">
+          <img src="${escapeHtml(src)}" alt="" loading="lazy">
+        </div>
+      `).join('');
+      return `
+        <div class="content-block gallery">
+          <div class="gallery-grid">${gridItems}</div>
+        </div>
+      `;
+    }
 
     case 'image':
       return `
@@ -392,11 +446,6 @@ function renderContentBlock(block, index) {
       return '';
   }
 }
-
-/* ═══════════════════════════════════════════════════════════ */
-/*  工具函数                                                    */
-/* ═══════════════════════════════════════════════════════════ */
-
 function navigateToArticle(id) {
   window.location.href = 'article.html?id=' + encodeURIComponent(id);
 }
