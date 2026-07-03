@@ -449,7 +449,7 @@ function renderContentBlock(block, index) {
       if (images.length === 0) return '';
       const gridItems = images.map(src => `
         <div class="gallery-item">
-          <img src="${escapeHtml(assetUrl(src))}" alt="" loading="lazy">
+          <img src="${escapeHtml(assetUrl(src))}" alt="" loading="lazy" decoding="async">
         </div>
       `).join('');
       return `
