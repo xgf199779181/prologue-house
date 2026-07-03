@@ -25,7 +25,13 @@ function localUrl(path) {
 
 /* 根据当前协议自动选择 CDN 或本地路径 */
 function assetUrl(path) {
-  return window.location.protocol === 'file:' ? localUrl(path) : cdnUrl(path);
+  if (window.location.protocol === 'file:') return localUrl(path);
+  // 本地开发时也用本地资源，不走 CDN
+  const host = window.location.hostname;
+  if (host === 'localhost' || host === '127.0.0.1' || host.startsWith('192.168.') || host.startsWith('10.')) {
+    return localUrl(path);
+  }
+  return cdnUrl(path);
 }
 
 /* 页面离开时保存滚动位置 */
