@@ -1034,10 +1034,10 @@ function loadLeaflet(callback) {
   if (window.L) { callback(); return; }
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+  link.href = 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css';
   document.head.appendChild(link);
   const script = document.createElement('script');
-  script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+  script.src = 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js';
   script.onload = callback;
   document.head.appendChild(script);
 }
@@ -1048,8 +1048,11 @@ function initLeafletMap() {
     attributionControl: false
   }).setView([33, 108], 4);
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    maxZoom: 19
+  // 高德矢量地图瓦片（国内可访问）
+  L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}', {
+    maxZoom: 18,
+    minZoom: 1,
+    subdomains: '1234'
   }).addTo(map);
 
   const cities = [
@@ -1087,10 +1090,12 @@ function initLeafletMap() {
 
   // 连线：郑州 -> 上海 -> 广州
   L.polyline([[34.8, 113.6], [31.2, 121.5], [23.1, 113.3]], {
-    color: '#FF6B9D',
-    weight: 2,
-    opacity: 0.5,
-    dashArray: '6, 6'
+    color: '#E84A7F',
+    weight: 4,
+    opacity: 0.85,
+    dashArray: '8, 6',
+    lineCap: 'round',
+    lineJoin: 'round'
   }).addTo(map);
 }
 
