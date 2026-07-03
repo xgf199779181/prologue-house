@@ -34,6 +34,15 @@ function assetUrl(path) {
   return cdnUrl(path);
 }
 
+/* 生成缩略图路径：assets/foo.jpg -> assets/thumbs/foo.jpg */
+function thumbPath(path) {
+  if (typeof path !== 'string') return path;
+  if (path.startsWith('http')) return path;
+  if (path.startsWith('/')) return '/thumbs' + path;
+  if (path.startsWith('assets/')) return path.replace('assets/', 'assets/thumbs/');
+  return 'thumbs/' + path;
+}
+
 /* 页面离开时保存滚动位置 */
 window.addEventListener('beforeunload', () => {
   sessionStorage.setItem('scroll_' + CURRENT_PAGE, window.scrollY);
@@ -447,13 +456,14 @@ function renderContentBlock(block, index) {
     case 'gallery': {
       const images = Array.isArray(block.images) ? block.images : [];
       if (images.length === 0) return '';
-      const gridItems = images.map(src => `
-        <div class="gallery-item">
-          <img src="${escapeHtml(assetUrl(src))}" alt="" loading="lazy" decoding="async">
+      const galleryId = 'gallery-' + Math.random().toString(36).slice(2, 9);
+      const gridItems = images.map((src, idx) => `
+        <div class="gallery-item" role="button" aria-label="查看大图" onclick="openLightbox('${galleryId}', ${idx})">
+          <img src="${escapeHtml(assetUrl(thumbPath(src)))}" data-full="${escapeHtml(assetUrl(src))}" alt="" loading="lazy" decoding="async">
         </div>
       `).join('');
       return `
-        <div class="content-block gallery">
+        <div class="content-block gallery" data-gallery-id="${galleryId}" data-gallery-images='${escapeHtml(JSON.stringify(images.map(src => assetUrl(src))))}'>
           <div class="gallery-grid">${gridItems}</div>
         </div>
       `;
@@ -1122,6 +1132,7 @@ async function loadArticlePage() {
   }
 
   renderArticle(id);
+  initLightbox();
   window.scrollTo(0, 0);
 }
 
@@ -1138,4 +1149,89 @@ async function loadMapPage() {
 
   renderMap();
   window.scrollTo(0, 0);
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  图片点击放大 Lightbox                                        */
+/* ═══════════════════════════════════════════════════════════ */
+
+let lightboxState = { images: [], index: 0 };
+
+function initLightbox() {
+  let el = document.getElementById('lightbox');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'lightbox';
+    el.className = 'lightbox';
+    el.setAttribute('role', 'dialog');
+    el.setAttribute('aria-modal', 'true');
+    el.innerHTML = `
+      <div class="lightbox-backdrop" onclick="closeLightbox()"></div>
+      <button class="lightbox-close" onclick="closeLightbox()" aria-label="关闭">×</button>
+      <button class="lightbox-prev" onclick="lightboxPrev()" aria-label="上一张">‹</button>
+      <button class="lightbox-next" onclick="lightboxNext()" aria-label="下一张">›</button>
+      <div class="lightbox-stage">
+        <img id="lightbox-img" src="" alt="放大图片">
+      </div>
+      <div class="lightbox-counter"><span id="lightbox-index">1</span> / <span id="lightbox-total">1</span></div>
+    `;
+    document.body.appendChild(el);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (!document.getElementById('lightbox')?.classList.contains('active')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') lightboxPrev();
+    if (e.key === 'ArrowRight') lightboxNext();
+  });
+}
+
+function openLightbox(galleryId, index) {
+  const gallery = document.querySelector(`.gallery[data-gallery-id="${galleryId}"]`);
+  if (!gallery) return;
+  try {
+    lightboxState.images = JSON.parse(gallery.dataset.galleryImages || '[]');
+  } catch {
+    lightboxState.images = [];
+  }
+  if (!lightboxState.images.length) return;
+  lightboxState.index = Math.max(0, Math.min(index, lightboxState.images.length - 1));
+  updateLightbox();
+  const el = document.getElementById('lightbox');
+  if (el) el.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  const el = document.getElementById('lightbox');
+  if (el) el.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function lightboxPrev() {
+  if (!lightboxState.images.length) return;
+  lightboxState.index = (lightboxState.index - 1 + lightboxState.images.length) % lightboxState.images.length;
+  updateLightbox();
+}
+
+function lightboxNext() {
+  if (!lightboxState.images.length) return;
+  lightboxState.index = (lightboxState.index + 1) % lightboxState.images.length;
+  updateLightbox();
+}
+
+function updateLightbox() {
+  const img = document.getElementById('lightbox-img');
+  const idx = document.getElementById('lightbox-index');
+  const total = document.getElementById('lightbox-total');
+  if (img) {
+    img.style.opacity = '0';
+    setTimeout(() => {
+      img.src = lightboxState.images[lightboxState.index];
+      img.onload = () => { img.style.opacity = '1'; };
+      img.onerror = () => { img.style.opacity = '1'; };
+    }, 150);
+  }
+  if (idx) idx.textContent = String(lightboxState.index + 1);
+  if (total) total.textContent = String(lightboxState.images.length);
 }
